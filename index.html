@@ -3,36 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cobranza Estratégica · Gestapack · 22/04/2026</title>
+<title>Cobranza Estratégica · Gestapack</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;color:#1a1a2e;font-size:13px}
 
-/* HEADER */
-.header{background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);color:#fff;padding:22px 40px;display:flex;justify-content:space-between;align-items:center}
-.h-left h1{font-size:20px;font-weight:800;letter-spacing:.2px}
-.h-left p{font-size:11px;opacity:.6;margin-top:3px}
-.h-right{text-align:right;font-size:11px;opacity:.75;line-height:1.8}
-.h-right strong{font-size:22px;display:block;opacity:1;font-weight:900}
+/* ── UPLOAD SCREEN ── */
+#upload-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 60%,#24243e 100%)}
+.up-logo{color:#fff;font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:.5px}
+.up-sub{color:rgba(255,255,255,.5);font-size:12px;margin-bottom:36px}
+.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:760px;margin-bottom:28px}
+.dropzone{background:rgba(255,255,255,.07);border:2px dashed rgba(255,255,255,.25);border-radius:16px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.dropzone:hover,.dropzone.drag{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.6)}
+.dropzone.loaded{background:rgba(39,174,96,.12);border-color:#27ae60;border-style:solid}
+.dropzone.error{background:rgba(192,57,43,.12);border-color:#c0392b;border-style:solid}
+.dz-icon{font-size:36px;margin-bottom:10px}
+.dz-title{color:#fff;font-size:13px;font-weight:700;margin-bottom:4px}
+.dz-hint{color:rgba(255,255,255,.4);font-size:11px}
+.dz-status{margin-top:10px;font-size:11px;font-weight:700;min-height:16px}
+.dz-ok{color:#2ecc71}.dz-err{color:#e74c3c}
+.dz-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.up-btn{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;border:none;padding:14px 48px;border-radius:30px;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(39,174,96,.4)}
+.up-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(39,174,96,.5)}
+.up-btn:disabled{background:#4a4a6a;box-shadow:none;transform:none;cursor:not-allowed;opacity:.6}
+.up-note{color:rgba(255,255,255,.35);font-size:11px;margin-top:14px;text-align:center}
 
-/* NAV */
-.nav{background:#1a1a2e;padding:10px 40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+/* ── DASHBOARD ── */
+#dashboard{display:none}
+.hdr{background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#fff;padding:20px 40px;display:flex;justify-content:space-between;align-items:center}
+.hdr-l h1{font-size:19px;font-weight:800}.hdr-l p{font-size:11px;opacity:.55;margin-top:3px}
+.hdr-r{text-align:right;font-size:11px;opacity:.7;line-height:1.8}.hdr-r strong{font-size:22px;display:block;opacity:1;font-weight:900}
+.nav{background:#1a1a2e;padding:9px 40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .nlbl{color:#5d6d7e;font-size:10px;font-weight:700;text-transform:uppercase;margin-right:4px}
-.nav-link{color:#aab7c4;text-decoration:none;font-size:11px;font-weight:600;padding:4px 12px;border-radius:12px;border:1px solid #2c3e50;transition:all .15s}
-.nav-link:hover{background:#2980b9;color:#fff;border-color:#2980b9}
-.nsep{color:#2c3e50;margin:0 4px;font-size:14px}
-
+.nav a{color:#aab7c4;text-decoration:none;font-size:11px;font-weight:600;padding:4px 11px;border-radius:12px;border:1px solid #2c3e50;transition:all .15s}
+.nav a:hover{background:#2980b9;color:#fff;border-color:#2980b9}
+.nav .reset-btn{margin-left:auto;background:rgba(192,57,43,.15);color:#e74c3c;border-color:#c0392b;cursor:pointer;font-size:10px}
+.nav .reset-btn:hover{background:#c0392b;color:#fff}
 .wrap{padding:24px 40px;max-width:1480px;margin:0 auto}
 
-/* SECTION LABELS */
+/* SECTION */
 .slbl{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.snum{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;flex-shrink:0;background:linear-gradient(135deg,#1a1a2e,#2c3e50)}
-.stxt{font-size:16px;font-weight:800;color:#1a1a2e}
-.ssub{font-size:11px;color:#95a5a6;margin-top:2px}
+.snum{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:800;flex-shrink:0}
+.stxt{font-size:16px;font-weight:800}.ssub{font-size:11px;color:#95a5a6;margin-top:2px}
 
 /* KPI GRID */
 .kgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
-.kpi{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-top:4px solid #ccc;position:relative}
+.kpi{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-top:4px solid #ccc}
 .kpi.r{border-top-color:#c0392b}.kpi.o{border-top-color:#e67e22}.kpi.g{border-top-color:#27ae60}.kpi.b{border-top-color:#2980b9}.kpi.p{border-top-color:#8e44ad}
 .ki{font-size:22px;margin-bottom:6px}.kl{font-size:10px;font-weight:700;text-transform:uppercase;color:#95a5a6;letter-spacing:.5px;margin-bottom:4px}
 .kv{font-size:22px;font-weight:900;color:#1a1a2e;line-height:1}.ks{font-size:10px;color:#bdc3c7;margin-top:5px}
@@ -43,7 +59,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;color:#1a1a2e;fo
 .card0{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:22px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 
 /* DIVIDER */
-.div{height:3px;background:linear-gradient(90deg,#c0392b,#e74c3c,#f39c12,#f1c40f);border-radius:2px;margin:32px 0 24px}
+.div{height:3px;background:linear-gradient(90deg,#c0392b,#e74c3c,#f39c12,#f1c40f);border-radius:2px;margin:30px 0 22px}
 
 /* TABLES */
 table{width:100%;border-collapse:collapse;font-size:12px}
@@ -62,90 +78,529 @@ tfoot td.num{text-align:right;font-family:monospace}
 
 /* VENDOR BLOCKS */
 .vblock{background:#fff;border-radius:12px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.vhdr{background:#f7f9fc;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e8ecf1}
+.vhdr{background:#f7f9fc;padding:18px 26px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #e8ecf1;flex-wrap:wrap;gap:12px}
 .vname{font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
 .vstats{display:flex;gap:16px;font-size:11px;color:#7f8c8d;flex-wrap:wrap}
-.vstats span{display:flex;align-items:center;gap:4px}
-.cbox{background:#f0f4ff;border:1px solid #d5e0ff;border-radius:8px;padding:12px 18px;text-align:center;min-width:168px}
+.cboxes{display:flex;gap:12px;flex-wrap:wrap}
+.cbox{background:#f0f4ff;border:1px solid #d5e0ff;border-radius:8px;padding:11px 16px;text-align:center;min-width:155px}
 .cbox.pend{background:#f0fff4;border-color:#a8d5b5}
 .clbl{font-size:10px;font-weight:600;color:#7f8c8d;text-transform:uppercase;letter-spacing:.3px}
-.cval{font-size:20px;font-weight:900;color:#1a1a2e;margin-top:4px}
+.cval{font-size:19px;font-weight:900;color:#1a1a2e;margin-top:3px}
 .csub{font-size:10px;color:#95a5a6;margin-top:2px}
 .sub-t{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;padding:12px 26px 8px;border-top:1px solid #f0f2f7}
 .vblock table thead th{padding:8px 26px}
 .vblock table tbody td{padding:8px 26px}
-
-.alert-today{background:#fff5f5!important}
-
+.alert-today{background:#fff8f0!important}
+.no-data td{text-align:center;color:#27ae60;padding:14px!important;font-size:12px}
+.emp-note{background:#fff3cd;border-left:4px solid #ffc107;padding:10px 14px;margin:12px 26px;border-radius:6px;font-size:11px;color:#856404}
 .footer{text-align:center;padding:20px;color:#bdc3c7;font-size:11px;margin-top:10px}
+
+/* SPINNER */
+#spinner{display:none;position:fixed;inset:0;background:rgba(15,12,41,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.spin{width:48px;height:48px;border:5px solid rgba(255,255,255,.2);border-top-color:#27ae60;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#spinner p{color:#fff;font-size:14px;font-weight:600}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="h-left">
-    <h1>📊 Sistema de Análisis de Cobranza Estratégica y Comisiones</h1>
-    <p>COMERCIAL GESTAPACK SPA · Exportación Sistema Kame · Fecha de Corte: 22 de abril de 2026 (Miércoles)</p>
+<!-- SPINNER -->
+<div id="spinner" style="display:flex">
+  <div class="spin"></div>
+  <p>Procesando archivos…</p>
+</div>
+
+<!-- UPLOAD SCREEN -->
+<div id="upload-screen" style="display:none">
+  <div class="up-logo">📊 Cobranza Estratégica</div>
+  <div class="up-sub">COMERCIAL GESTAPACK SPA · Sistema Kame · Carga los dos archivos de exportación para generar el análisis</div>
+  <div class="up-grid">
+    <div class="dropzone" id="dz-cxc" ondragover="dzDrag(event,'dz-cxc')" ondragleave="dzLeave('dz-cxc')" ondrop="dzDrop(event,'cxc')">
+      <input class="dz-input" type="file" accept=".csv" onchange="fileSelected(event,'cxc')">
+      <div class="dz-icon">📋</div>
+      <div class="dz-title">Informe de Cuentas por Cobrar</div>
+      <div class="dz-hint">Arrastra o haz clic · archivo .csv de Kame</div>
+      <div class="dz-status" id="st-cxc"></div>
+    </div>
+    <div class="dropzone" id="dz-cob" ondragover="dzDrag(event,'dz-cob')" ondragleave="dzLeave('dz-cob')" ondrop="dzDrop(event,'cob')">
+      <input class="dz-input" type="file" accept=".csv" onchange="fileSelected(event,'cob')">
+      <div class="dz-icon">💰</div>
+      <div class="dz-title">Informe de Cobros</div>
+      <div class="dz-hint">Arrastra o haz clic · archivo .csv de Kame</div>
+      <div class="dz-status" id="st-cob"></div>
+    </div>
   </div>
-  <div class="h-right">
-    <strong>22/04/2026</strong>
-    Bloqueo ≥3d · Comisión 1.5% · Corte ≤25 Abr
+  <button class="up-btn" id="gen-btn" onclick="generateDashboard()" disabled>Generar Dashboard →</button>
+  <div class="up-note">Los archivos se procesan localmente en tu navegador. Ningún dato sale de tu computador.</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let fileCXC = null, fileCOB = null;
+const CR = 0.015;   // commission rate
+const BLOCK = 3;    // days to block
+
+// ═══════════════════════════════════════════════════════════
+// CSV PARSER
+// ═══════════════════════════════════════════════════════════
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  return lines.map(line => {
+    const fields = [];
+    let f = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ';' && !inQ) { fields.push(f.trim()); f = ''; }
+      else { f += c; }
+    }
+    fields.push(f.trim());
+    return fields;
+  });
+}
+
+function pd(s) {
+  if (!s) return null;
+  const m = s.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2]-1, +m[1]);
+}
+
+function ci(s) {
+  if (!s) return 0;
+  const n = parseInt(s.replace(/\./g,'').replace(',',''));
+  return isNaN(n) ? 0 : n;
+}
+
+function fm(n) {
+  if (n < 0) return `($${Math.abs(n).toLocaleString('es-CL')})`;
+  return '$' + Math.abs(n).toLocaleString('es-CL');
+}
+
+function dateDiff(a, b) {
+  // days difference a - b (integer)
+  return Math.round((a - b) / 86400000);
+}
+
+function addDays(d, n) {
+  const r = new Date(d); r.setDate(r.getDate() + n); return r;
+}
+
+function sameDay(a, b) {
+  return a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILE UPLOAD UI
+// ═══════════════════════════════════════════════════════════
+function dzDrag(e, id) { e.preventDefault(); document.getElementById(id).classList.add('drag'); }
+function dzLeave(id) { document.getElementById(id).classList.remove('drag'); }
+function dzDrop(e, type) {
+  e.preventDefault();
+  const id = type === 'cxc' ? 'dz-cxc' : 'dz-cob';
+  document.getElementById(id).classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) loadFile(file, type);
+}
+function fileSelected(e, type) {
+  const file = e.target.files[0];
+  if (file) loadFile(file, type);
+}
+
+function loadFile(file, type) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Auto-detect file type from content
+    const text = e.target.result;
+    const firstLine = text.split('\n')[0].toLowerCase();
+    let detectedType = type;
+    if (firstLine.includes('cuentas por cobrar')) detectedType = 'cxc';
+    else if (firstLine.includes('cobros')) detectedType = 'cob';
+
+    if (detectedType === 'cxc') {
+      fileCXC = text;
+      setDZStatus('dz-cxc','st-cxc', '✅ ' + file.name, true);
+    } else {
+      fileCOB = text;
+      setDZStatus('dz-cob','st-cob', '✅ ' + file.name, true);
+    }
+    document.getElementById('gen-btn').disabled = !(fileCXC && fileCOB);
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function setDZStatus(dzId, stId, msg, ok) {
+  const dz = document.getElementById(dzId);
+  const st = document.getElementById(stId);
+  dz.classList.toggle('loaded', ok);
+  dz.classList.toggle('error', !ok);
+  st.className = 'dz-status ' + (ok ? 'dz-ok' : 'dz-err');
+  st.textContent = msg;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CORE ANALYSIS
+// ═══════════════════════════════════════════════════════════
+function analyse(cxcText, cobText) {
+
+  // ── Parse CXC ──────────────────────────────────────────
+  const cxcRows = parseCSV(cxcText);
+  // Extract TODAY from header line 2: "FECHA DE VENCIMIENTO: ... hasta DD/MM/YYYY"
+  let TODAY = new Date();
+  for (let i = 0; i < Math.min(5, cxcRows.length); i++) {
+    const line = cxcRows[i].join(' ');
+    const m = line.match(/hasta\s+(\d{2}\/\d{2}\/\d{4})/i);
+    if (m) { TODAY = pd(m[1]); break; }
+  }
+
+  const COMM_CUT = new Date(TODAY.getFullYear(), TODAY.getMonth(), 25); // 25th of current month
+
+  const cxc = [];
+  let dataStart = false;
+  for (const row of cxcRows) {
+    if (row[0] === '1.01.05.01 Deudores por venta' || (row.length >= 12 && row[1] && row[1].match(/^\d{1,2}\.\d{3}/) )) {
+      const rut=row[1], razon=row[2], vend=row[3]||'Empresa',
+            num=row[5], fvs=row[7], td=ci(row[9]), tc=ci(row[10]), sal=ci(row[11]);
+      if (!rut || !rut.match(/\d/) || sal <= 0) continue;
+      const fv = pd(fvs); if (!fv) continue;
+      const dias = Math.max(0, dateDiff(TODAY, fv));
+      const bloq = dias >= BLOCK;
+      const alertF = sameDay(fv, TODAY) && !bloq;
+      cxc.push({rut,cliente:razon,vendedor:vend.trim()||'Empresa',num,fv,td,tc,saldo:sal,
+                dias,bloq,alertF,enCorte:fv<=COMM_CUT});
+    }
+  }
+
+  // ── Parse COBROS ───────────────────────────────────────
+  const cobRows = parseCSV(cobText);
+  const cobros = [];
+  for (let i = 6; i < cobRows.length; i++) {
+    const row = cobRows[i];
+    if (row.length < 11) continue;
+    const fecha = pd(row[0]); if (!fecha) continue;
+    const rut = row[5];
+    const monto = ci(row[10]);
+    const venc = pd(row[9]);
+    const dl = (venc && fecha > venc) ? dateDiff(fecha, venc) : 0;
+    cobros.push({fecha, rut, monto, venc, dl});
+  }
+
+  // ── Historical payment profile ─────────────────────────
+  const histDL  = {}, histMnt = {};
+  for (const c of cobros) {
+    if (!histDL[c.rut])  histDL[c.rut]  = [];
+    if (!histMnt[c.rut]) histMnt[c.rut] = [];
+    histDL[c.rut].push(c.dl);
+    if (c.monto > 0) histMnt[c.rut].push(c.monto);
+  }
+  const avgDays = {}, avgSale = {};
+  for (const r in histDL)  avgDays[r] = histDL[r].reduce((a,b)=>a+b,0)/histDL[r].length;
+  for (const r in histMnt) avgSale[r] = histMnt[r].reduce((a,b)=>a+b,0)/histMnt[r].length;
+
+  // ── KPIs ───────────────────────────────────────────────
+  const totalSaldo    = cxc.reduce((s,r)=>s+r.saldo,0);
+  const totalMora     = cxc.filter(r=>r.bloq).reduce((s,r)=>s+r.saldo,0);
+  const totalCobCXC   = cxc.reduce((s,r)=>s+r.tc,0);
+  const pctMora       = totalSaldo ? totalMora/totalSaldo*100 : 0;
+
+  const weekStart = new Date(TODAY); weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+  const cobradoSemana = cobros.filter(c=>c.fecha>=weekStart && c.fecha<=TODAY).reduce((s,c)=>s+c.monto,0);
+  const veniceHoy     = cxc.filter(r=>r.alertF).reduce((s,r)=>s+r.saldo,0);
+  const numBloq       = new Set(cxc.filter(r=>r.bloq).map(r=>r.rut)).size;
+
+  // ── Pareto 80% ─────────────────────────────────────────
+  const cliAgg = {};
+  for (const r of cxc) {
+    if (!r.bloq) continue;
+    if (!cliAgg[r.rut]) cliAgg[r.rut]={saldo:0,nombre:r.cliente,vendedor:r.vendedor,diasMax:0,facturas:0,td:0};
+    cliAgg[r.rut].saldo    += r.saldo;
+    cliAgg[r.rut].td       += r.td;
+    cliAgg[r.rut].diasMax   = Math.max(cliAgg[r.rut].diasMax, r.dias);
+    cliAgg[r.rut].facturas += 1;
+  }
+  const moraSorted = Object.entries(cliAgg).sort((a,b)=>b[1].saldo-a[1].saldo);
+  const pareto = []; let acum = 0;
+  for (const [rut, d] of moraSorted) {
+    acum += d.saldo;
+    const pa = totalMora ? acum/totalMora*100 : 0;
+    const ad = avgDays[rut];
+    const as_ = avgSale[rut] || d.td/Math.max(d.facturas,1);
+    const alertaT = ad != null && d.diasMax > ad*1.5;
+    pareto.push({...d,rut,pct:d.saldo/totalMora*100,pctAcum:pa,avgD:ad,avgS:as_,alertaT});
+    if (pa >= 80) break;
+  }
+
+  // ── By Vendor ──────────────────────────────────────────
+  const VENDOR_ORDER = ['Carolina Nicoletti','Ricardo Saldias','Ignacio del Solar',
+                        'Benjamin Diez','Manuela Gámez','Andrés Toledo','Empresa'];
+  const vData = {};
+  for (const r of cxc) {
+    const v = r.vendedor;
+    if (!vData[v]) vData[v]={cartera:0,mora:0,cobrado:0,bajoCorte:0,cliMora:{},alertas:[]};
+    vData[v].cartera += r.saldo;
+    vData[v].cobrado += r.tc;
+    if (r.enCorte) vData[v].bajoCorte += r.saldo;
+    if (r.bloq) {
+      vData[v].mora += r.saldo;
+      if (!vData[v].cliMora[r.rut]) vData[v].cliMora[r.rut]={saldo:0,nombre:r.cliente,diasMax:0,facturas:0};
+      vData[v].cliMora[r.rut].saldo    += r.saldo;
+      vData[v].cliMora[r.rut].diasMax   = Math.max(vData[v].cliMora[r.rut].diasMax, r.dias);
+      vData[v].cliMora[r.rut].facturas += 1;
+    }
+    if (r.alertF) vData[v].alertas.push(r);
+  }
+
+  return {TODAY, COMM_CUT, cxc, cobros, totalSaldo, totalMora, totalCobCXC,
+          pctMora, cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
+          vData, VENDOR_ORDER, avgDays, avgSale};
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════════════════════
+function hc(p){return p>=80?'#c0392b':p>=65?'#e67e22':p>=45?'#f39c12':'#27ae60'}
+
+function daysBadge(d){
+  const c=d>=60?['#c0392b','#fdecea']:d>=30?['#d35400','#fef5e7']:d>=14?['#b7950b','#fefde7']:['#1a5276','#ebf5fb'];
+  return `<span style="background:${c[1]};color:${c[0]};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+${d}d</span>`;
+}
+
+function riskBadge(alerta, dias){
+  if(alerta) return '<span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span>';
+  if(dias>=60) return '<span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🔴 MUY CRÍTICO</span>';
+  if(dias>=30) return '<span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟠 CRÍTICO</span>';
+  if(dias>=14) return '<span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span>';
+  return '<span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span>';
+}
+
+function statusBadge(p){
+  if(p>=80) return '<span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🔴 CRÍTICO</span>';
+  if(p>=65) return '<span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟠 ALERTA</span>';
+  if(p>=45) return '<span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 ATENCIÓN</span>';
+  return '<span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 NORMAL</span>';
+}
+
+function fdate(d){if(!d)return'—';return d.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmths(d){if(!d)return'—';return d.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'});}
+
+// ═══════════════════════════════════════════════════════════
+// VENDOR BLOCK
+// ═══════════════════════════════════════════════════════════
+function vendorBlock(v, d, avgDays, avgSale) {
+  const mp = d.cartera ? d.mora/d.cartera*100 : 0;
+  const col = hc(mp);
+  const commCob  = d.cobrado * CR;
+  const commPend = d.bajoCorte * CR;
+
+  const cliSorted = Object.entries(d.cliMora).sort((a,b)=>b[1].saldo-a[1].saldo);
+  let moraRows = cliSorted.map(([rut,cd])=>{
+    const ad = avgDays[rut];
+    const alerta = ad != null && cd.diasMax > ad*1.5;
+    return `<tr>
+      <td><strong>${cd.nombre.substring(0,48)}</strong></td>
+      <td class="num" style="color:#c0392b">${fm(cd.saldo)}</td>
+      <td class="num">${cd.facturas}</td>
+      <td style="text-align:center">${daysBadge(cd.diasMax)}</td>
+      <td style="text-align:center">${ad!=null?Math.round(ad)+'d':'—'}</td>
+      <td>${riskBadge(alerta, cd.diasMax)}</td>
+    </tr>`;
+  }).join('');
+  if(!moraRows) moraRows=`<tr class="no-data"><td colspan="6">✅ Sin clientes bloqueados</td></tr>`;
+
+  // Group alerts by client
+  const alAgg = {};
+  for(const r of d.alertas){
+    if(!alAgg[r.rut]) alAgg[r.rut]={saldo:0,nombre:r.cliente,facturas:0};
+    alAgg[r.rut].saldo+=r.saldo; alAgg[r.rut].facturas+=1;
+  }
+  const alTotal = Object.values(alAgg).reduce((s,a)=>s+a.saldo,0);
+  let alRows = Object.entries(alAgg).sort((a,b)=>b[1].saldo-a[1].saldo).map(([rut,a])=>`
+    <tr class="alert-today">
+      <td><strong>${a.nombre.substring(0,48)}</strong></td>
+      <td style="text-align:center"><strong>Hoy</strong></td>
+      <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
+      <td class="num" style="color:#e67e22">${fm(a.saldo)}</td>
+      <td class="num" style="color:#8e44ad">${fm(a.saldo*CR)}</td>
+    </tr>`).join('');
+  if(!alRows) alRows=`<tr class="no-data"><td colspan="5">✅ Sin vencimientos hoy</td></tr>`;
+
+  const vLabel = v==='Empresa' ? '🏢 Empresa (sin vendedor asignado)' : `👤 ${v}`;
+  const empNote = v==='Empresa'?`<div class="emp-note">⚠️ Cartera sin ejecutivo. Requiere asignación urgente para garantizar seguimiento y comisión.</div>`:'';
+
+  return `
+<div class="vblock" id="v_${v.replace(/\s/g,'_')}">
+  <div class="vhdr" style="border-left:5px solid ${col}">
+    <div>
+      <div class="vname">${vLabel}</div>
+      <div class="vstats">
+        <span>Cartera: <strong>${fm(d.cartera)}</strong></span>
+        <span>Mora: <strong style="color:${col}">${fm(d.mora)}</strong> (${mp.toFixed(0)}%)</span>
+        <span>Cobrado hist.: <strong style="color:#27ae60">${fm(d.cobrado)}</strong></span>
+        <span>Bajo corte ≤25: <strong>${fm(d.bajoCorte)}</strong></span>
+      </div>
+    </div>
+    <div class="cboxes">
+      <div class="cbox">
+        <div class="clbl">💰 Com. sobre Cobrado</div>
+        <div class="cval">${fm(commCob)}</div>
+        <div class="csub">Base: ${fm(d.cobrado)}</div>
+      </div>
+      <div class="cbox pend">
+        <div class="clbl">🎯 Com. Pendiente ≤25</div>
+        <div class="cval">${fm(commPend)}</div>
+        <div class="csub">Base: ${fm(d.bajoCorte)}</div>
+      </div>
+    </div>
+  </div>
+  ${empNote}
+  <div class="sub-t">🚫 Clientes Bloqueados — ${cliSorted.length} · ${fm(d.mora)}</div>
+  <table>
+    <thead><tr>
+      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
+      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
+      <th style="text-align:center">Perfil de Riesgo</th>
+    </tr></thead>
+    <tbody>${moraRows}</tbody>
+  </table>
+  <div class="sub-t" style="margin-top:4px">⏰ Alertas — Vencen HOY (${Object.keys(alAgg).length} clientes · ${fm(alTotal)})</div>
+  <table>
+    <thead><tr>
+      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
+      <th class="num">Monto</th><th class="num">Com. en Juego</th>
+    </tr></thead>
+    <tbody>${alRows}</tbody>
+  </table>
+</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ═══════════════════════════════════════════════════════════
+function renderDashboard(data) {
+  const {TODAY, COMM_CUT, cxc, totalSaldo, totalMora, totalCobCXC, pctMora,
+         cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
+         vData, VENDOR_ORDER, avgDays, avgSale} = data;
+
+  const fToday = fmths(TODAY);
+  const fTodayShort = fdate(TODAY);
+
+  // ── Summary table rows ──
+  let sumRows = '';
+  for (const v of VENDOR_ORDER) {
+    if (!vData[v]) continue;
+    const d = vData[v];
+    const mp = d.cartera ? d.mora/d.cartera*100 : 0;
+    const col = hc(mp);
+    const alHoy = d.alertas.reduce((s,r)=>s+r.saldo,0);
+    const vl = v==='Empresa'?'🏢 Empresa':v;
+    sumRows += `<tr>
+      <td><strong>${vl}</strong></td>
+      <td class="num">${fm(d.cartera)}</td>
+      <td class="num" style="color:${col}">${fm(d.mora)}</td>
+      <td class="num" style="color:#e67e22">${fm(alHoy)}</td>
+      <td class="num" style="color:#27ae60">${fm(d.cobrado)}</td>
+      <td style="text-align:center"><strong style="color:${col}">${mp.toFixed(0)}%</strong></td>
+      <td style="text-align:center">${statusBadge(mp)}</td>
+      <td style="text-align:center"><a href="#v_${v.replace(/\s/g,'_')}" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
+    </tr>`;
+  }
+  const totCartera = VENDOR_ORDER.filter(v=>vData[v]).reduce((s,v)=>s+vData[v].cartera,0);
+  const totMoraV   = VENDOR_ORDER.filter(v=>vData[v]).reduce((s,v)=>s+vData[v].mora,0);
+  const totAlHoy   = VENDOR_ORDER.filter(v=>vData[v]).reduce((s,v)=>s+vData[v].alertas.reduce((x,r)=>x+r.saldo,0),0);
+  const totCob     = VENDOR_ORDER.filter(v=>vData[v]).reduce((s,v)=>s+vData[v].cobrado,0);
+
+  // ── Pareto rows ──
+  const maxS = pareto.length ? pareto[0].saldo : 1;
+  let prRows = pareto.map((p,i) => {
+    const bw = (p.saldo/maxS*100).toFixed(0);
+    return `<tr ${i<3?'style="background:#fff8f8"':''}>
+      <td style="text-align:center"><strong>#${i+1}</strong></td>
+      <td><strong>${p.nombre.substring(0,45)}</strong></td>
+      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">${p.vendedor}</span></td>
+      <td class="num" style="color:#c0392b"><strong>${fm(p.saldo)}</strong></td>
+      <td class="num">${p.pct.toFixed(1)}%</td>
+      <td class="num"><strong>${p.pctAcum.toFixed(1)}%</strong></td>
+      <td style="text-align:center">${daysBadge(p.diasMax)}</td>
+      <td class="num">${p.facturas}</td>
+      <td style="text-align:center">${p.avgD!=null?Math.round(p.avgD)+'d':'—'}</td>
+      <td style="text-align:center">${p.avgS?fm(Math.round(p.avgS)):'—'}</td>
+      <td>${riskBadge(p.alertaT, p.diasMax)}</td>
+      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:${bw}%"></div></div></td>
+    </tr>`;
+  }).join('');
+
+  // ── Nav links ──
+  const navLinks = VENDOR_ORDER.filter(v=>vData[v]).map(v=>
+    `<a href="#v_${v.replace(/\s/g,'_')}">${v==='Empresa'?'🏢 Empresa':v.split(' ')[0]}</a>`
+  ).join('');
+
+  // ── Vendor sections ──
+  const vendorSections = VENDOR_ORDER.filter(v=>vData[v]).map(v=>
+    vendorBlock(v, vData[v], avgDays, avgSale)
+  ).join('');
+
+  const html = `
+<div class="hdr">
+  <div class="hdr-l">
+    <h1>📊 Sistema de Análisis de Cobranza Estratégica y Comisiones</h1>
+    <p>COMERCIAL GESTAPACK SPA · Exportación Sistema Kame · Corte al ${fToday}</p>
+  </div>
+  <div class="hdr-r">
+    <strong>${fTodayShort}</strong>
+    Bloqueo ≥3d · Comisión 1.5% · Corte ≤${fdate(COMM_CUT)}
   </div>
 </div>
 
 <div class="nav">
   <span class="nlbl">Ir a:</span>
-  <a href="#s1" class="nav-link">📋 Resumen</a>
-  <a href="#pareto" class="nav-link">🎯 Pareto</a>
-  <span class="nsep">|</span>
-  <span class="nlbl">Vendedores:</span>
-  <a href="#v_Carolina_Nicoletti" class="nav-link">Carolina</a><a href="#v_Ricardo_Saldias" class="nav-link">Ricardo</a><a href="#v_Ignacio_del_Solar" class="nav-link">Ignacio</a><a href="#v_Benjamin_Diez" class="nav-link">Benjamin</a><a href="#v_Manuela_Gámez" class="nav-link">Manuela</a><a href="#v_Andrés_Toledo" class="nav-link">Andrés</a><a href="#v_Empresa" class="nav-link">🏢 Empresa</a>
+  <a href="#s1">📋 Resumen</a>
+  <a href="#pareto">🎯 Pareto</a>
+  <span class="nlbl" style="margin-left:8px">Vendedores:</span>
+  ${navLinks}
+  <button class="nav-link reset-btn" onclick="resetApp()">↩ Cargar nuevos archivos</button>
 </div>
 
 <div class="wrap">
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECCIÓN 1: RESUMEN EJECUTIVO
-═══════════════════════════════════════════════════════════ -->
+<!-- ═══ SECCIÓN 1 ═══ -->
 <div id="s1" style="padding-top:8px">
   <div class="slbl">
-    <div class="snum">1</div>
+    <div class="snum" style="background:linear-gradient(135deg,#1a1a2e,#2c3e50)">1</div>
     <div>
       <div class="stxt">Sección 1 — Resumen Ejecutivo</div>
-      <div class="ssub">Vista gerencial · KPIs globales de cartera · Sin detalle de comisiones por vendedor</div>
+      <div class="ssub">Vista gerencial · KPIs globales · Sin detalle de comisiones por vendedor</div>
     </div>
   </div>
-
   <div class="kgrid">
     <div class="kpi r">
-      <div class="ki">💼</div>
-      <div class="kl">Cartera Total Pendiente</div>
-      <div class="kv">$171.528.853</div>
-      <div class="ks">252 facturas · 105 clientes</div>
+      <div class="ki">💼</div><div class="kl">Cartera Total Pendiente</div>
+      <div class="kv">${fm(totalSaldo)}</div>
+      <div class="ks">${cxc.length} facturas · ${new Set(cxc.map(r=>r.rut)).size} clientes</div>
     </div>
     <div class="kpi o">
-      <div class="ki">⚠️</div>
-      <div class="kl">Total en Mora (≥3 días)</div>
-      <div class="kv">$130.666.325</div>
-      <div class="kpill">76.2% cartera · 74 clientes</div>
+      <div class="ki">⚠️</div><div class="kl">Total en Mora (≥3 días)</div>
+      <div class="kv">${fm(totalMora)}</div>
+      <div class="kpill">${pctMora.toFixed(1)}% cartera · ${numBloq} clientes</div>
     </div>
     <div class="kpi g">
-      <div class="ki">✅</div>
-      <div class="kl">Cobrado Esta Semana</div>
-      <div class="kv">$76.800.657</div>
-      <div class="ks">Lun 20 – Mié 22 Abr 2026</div>
+      <div class="ki">✅</div><div class="kl">Cobrado Esta Semana</div>
+      <div class="kv">${fm(cobradoSemana)}</div>
+      <div class="ks">Lun – ${fTodayShort}</div>
     </div>
     <div class="kpi b">
-      <div class="ki">⏰</div>
-      <div class="kl">Vencen HOY (en riesgo)</div>
-      <div class="kv">$31.206.230</div>
-      <div class="ks">Caen en mora si no se cobran · 38 clientes</div>
+      <div class="ki">⏰</div><div class="kl">Vencen HOY (en riesgo)</div>
+      <div class="kv">${fm(veniceHoy)}</div>
+      <div class="ks">Caen en mora si no se cobran hoy</div>
     </div>
     <div class="kpi p">
-      <div class="ki">💚</div>
-      <div class="kl">Cartera Sana</div>
-      <div class="kv">$40.862.528</div>
-      <div class="ks">23.8% sin retraso significativo</div>
+      <div class="ki">💚</div><div class="kl">Cartera Sana</div>
+      <div class="kv">${fm(totalSaldo-totalMora)}</div>
+      <div class="ks">${(100-pctMora).toFixed(1)}% sin retraso significativo</div>
     </div>
   </div>
 
@@ -153,1471 +608,125 @@ tfoot td.num{text-align:right;font-family:monospace}
     <div style="font-size:13px;font-weight:700;margin-bottom:14px">Estado de Cartera por Ejecutivo — Vista Gerencial</div>
     <table>
       <thead><tr>
-        <th>Ejecutivo</th>
-        <th class="num">Cartera Total</th>
-        <th class="num">En Mora</th>
-        <th class="num">⚡ Vence HOY</th>
-        <th class="num">Cobrado (hist.)</th>
-        <th style="text-align:center">% Mora</th>
-        <th style="text-align:center">Estado</th>
+        <th>Ejecutivo</th><th class="num">Cartera Total</th><th class="num">En Mora</th>
+        <th class="num">⚡ Vence HOY</th><th class="num">Cobrado (hist.)</th>
+        <th style="text-align:center">% Mora</th><th style="text-align:center">Estado</th>
         <th style="text-align:center">Detalle</th>
       </tr></thead>
-      <tbody><tr>
-      <td><strong>Carolina Nicoletti</strong></td>
-      <td class="num">$19.475.387</td>
-      <td class="num" style="color:#c0392b">$15.698.802</td>
-      <td class="num" style="color:#e67e22"><strong>$3.395.996</strong></td>
-      <td class="num" style="color:#27ae60">$188.080</td>
-      <td style="text-align:center"><strong style="color:#c0392b">81%</strong></td>
-      <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🔴 CRÍTICO</span></td>
-      <td style="text-align:center"><a href="#v_Carolina_Nicoletti" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>Ricardo Saldias</strong></td>
-      <td class="num">$15.948.683</td>
-      <td class="num" style="color:#e67e22">$12.401.241</td>
-      <td class="num" style="color:#e67e22"><strong>$2.783.451</strong></td>
-      <td class="num" style="color:#27ae60">$527.078</td>
-      <td style="text-align:center"><strong style="color:#e67e22">78%</strong></td>
-      <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟠 ALERTA</span></td>
-      <td style="text-align:center"><a href="#v_Ricardo_Saldias" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>Ignacio del Solar</strong></td>
-      <td class="num">$21.872.556</td>
-      <td class="num" style="color:#e67e22">$14.439.046</td>
-      <td class="num" style="color:#e67e22"><strong>$3.359.897</strong></td>
-      <td class="num" style="color:#27ae60">$603.690</td>
-      <td style="text-align:center"><strong style="color:#e67e22">66%</strong></td>
-      <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟠 ALERTA</span></td>
-      <td style="text-align:center"><a href="#v_Ignacio_del_Solar" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>Benjamin Diez</strong></td>
-      <td class="num">$17.886.736</td>
-      <td class="num" style="color:#f39c12">$11.266.361</td>
-      <td class="num" style="color:#e67e22"><strong>$4.517.588</strong></td>
-      <td class="num" style="color:#27ae60">$691.237</td>
-      <td style="text-align:center"><strong style="color:#f39c12">63%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 ATENCIÓN</span></td>
-      <td style="text-align:center"><a href="#v_Benjamin_Diez" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>Manuela Gámez</strong></td>
-      <td class="num">$17.352.166</td>
-      <td class="num" style="color:#f39c12">$11.239.107</td>
-      <td class="num" style="color:#e67e22"><strong>$5.108.518</strong></td>
-      <td class="num" style="color:#27ae60">$334.395</td>
-      <td style="text-align:center"><strong style="color:#f39c12">65%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 ATENCIÓN</span></td>
-      <td style="text-align:center"><a href="#v_Manuela_Gámez" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>Andrés Toledo</strong></td>
-      <td class="num">$7.263.643</td>
-      <td class="num" style="color:#f39c12">$4.188.494</td>
-      <td class="num" style="color:#e67e22"><strong>$1.744.372</strong></td>
-      <td class="num" style="color:#27ae60">$0</td>
-      <td style="text-align:center"><strong style="color:#f39c12">58%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 ATENCIÓN</span></td>
-      <td style="text-align:center"><a href="#v_Andrés_Toledo" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr><tr>
-      <td><strong>🏢 Empresa</strong></td>
-      <td class="num">$71.729.682</td>
-      <td class="num" style="color:#c0392b">$61.433.274</td>
-      <td class="num" style="color:#e67e22"><strong>$10.296.408</strong></td>
-      <td class="num" style="color:#27ae60">$3.881.451</td>
-      <td style="text-align:center"><strong style="color:#c0392b">86%</strong></td>
-      <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🔴 CRÍTICO</span></td>
-      <td style="text-align:center"><a href="#v_Empresa" style="color:#2980b9;font-size:10px;font-weight:600;text-decoration:none">→ Ver detalle</a></td>
-    </tr></tbody>
+      <tbody>${sumRows}</tbody>
       <tfoot><tr>
         <td>TOTALES</td>
-        <td class="num">$171.528.853</td>
-        <td class="num" style="color:#c0392b">$130.666.325</td>
-        <td class="num" style="color:#e67e22">$31.206.230</td>
-        <td class="num" style="color:#27ae60">$6.225.931</td>
+        <td class="num">${fm(totCartera)}</td>
+        <td class="num" style="color:#c0392b">${fm(totMoraV)}</td>
+        <td class="num" style="color:#e67e22">${fm(totAlHoy)}</td>
+        <td class="num" style="color:#27ae60">${fm(totCob)}</td>
         <td colspan="3"></td>
       </tr></tfoot>
     </table>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     PARETO 80%
-═══════════════════════════════════════════════════════════ -->
+<!-- ═══ PARETO ═══ -->
 <div id="pareto"><div class="div"></div>
   <div class="slbl">
     <div class="snum" style="background:linear-gradient(135deg,#c0392b,#e74c3c)">🎯</div>
     <div>
       <div class="stxt">Ranking Pareto — Clientes que representan el 80% de la Mora</div>
-      <div class="ssub">Foco de gestión estratégica · Incluye perfil de riesgo histórico · Sin detalle de comisiones</div>
+      <div class="ssub">Foco estratégico de gestión · Perfil de riesgo histórico incluido · Sin detalle de comisiones</div>
     </div>
   </div>
   <div class="pnote">
     <div class="pnote-icon">⚡</div>
-    <div>Solo <strong>21 de 74 clientes bloqueados</strong> concentran el <strong>80% del monto en mora 
-    ($130.666.325)</strong>. Gestionar este grupo es la acción de mayor impacto para la recuperación de cartera. 
-    La columna <em>Días Prom. Pago</em> indica el comportamiento histórico de pago del cliente; 
-    si el retraso actual supera ese promedio en ×1.5, se activa la <strong>⚠️ Alerta Temprana</strong>.</div>
+    <div>Solo <strong>${pareto.length} de ${moraSorted.length} clientes bloqueados</strong> concentran el
+    <strong>80% del monto en mora (${fm(totalMora)})</strong>. Gestionar este grupo es la acción de mayor impacto.
+    La columna <em>Días Prom. Pago</em> refleja el historial real del cliente; si el retraso actual supera ese
+    promedio ×1.5, se activa la <strong>⚠️ Alerta Temprana</strong>.</div>
   </div>
   <div class="card0">
     <table>
       <thead><tr>
-        <th style="text-align:center">#</th>
-        <th>Cliente</th>
-        <th>Ejecutivo</th>
-        <th class="num">Deuda Vencida</th>
-        <th class="num">% Mora</th>
-        <th class="num">% Acumulado</th>
-        <th style="text-align:center">Retraso Máx.</th>
-        <th class="num">Facturas</th>
-        <th style="text-align:center">Días Prom. Pago</th>
-        <th style="text-align:center">Venta Prom.</th>
-        <th style="text-align:center">Perfil de Riesgo</th>
-        <th style="min-width:80px;text-align:center">Pareto</th>
+        <th style="text-align:center">#</th><th>Cliente</th><th>Ejecutivo</th>
+        <th class="num">Deuda Vencida</th><th class="num">% Mora</th><th class="num">% Acumulado</th>
+        <th style="text-align:center">Retraso Máx.</th><th class="num">Facturas</th>
+        <th style="text-align:center">Días Prom.</th><th style="text-align:center">Venta Prom.</th>
+        <th style="text-align:center">Perfil Riesgo</th>
+        <th style="min-width:70px;text-align:center">Pareto</th>
       </tr></thead>
-      <tbody><tr style="background:#fff8f8">
-      <td style="text-align:center"><strong>#1</strong></td>
-      <td><strong>BETTER FOOD SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$24.198.670</strong></td>
-      <td class="num">18.5%</td>
-      <td class="num"><strong>18.5%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+18d</span></td>
-      <td class="num">7</td>
-      <td style="text-align:center">14d</td>
-      <td style="text-align:center">$3.405.496</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:100%"></div></div></td>
-    </tr><tr style="background:#fff8f8">
-      <td style="text-align:center"><strong>#2</strong></td>
-      <td><strong>COMERCIAL PEDRO DE VALDIVIA SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$15.650.464</strong></td>
-      <td class="num">12.0%</td>
-      <td class="num"><strong>30.5%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-      <td class="num">3</td>
-      <td style="text-align:center">11d</td>
-      <td style="text-align:center">$3.529.158</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:65%"></div></div></td>
-    </tr><tr style="background:#fff8f8">
-      <td style="text-align:center"><strong>#3</strong></td>
-      <td><strong>El Toro Producciones Spa</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Carolina Nicoletti</span></td>
-      <td class="num" style="color:#c0392b"><strong>$7.684.722</strong></td>
-      <td class="num">5.9%</td>
-      <td class="num"><strong>36.4%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+20d</span></td>
-      <td class="num">9</td>
-      <td style="text-align:center">19d</td>
-      <td style="text-align:center">$977.231</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:32%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#4</strong></td>
-      <td><strong>DISTRIBUIDORA MERCANTE SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$6.584.413</strong></td>
-      <td class="num">5.0%</td>
-      <td class="num"><strong>41.4%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-      <td class="num">3</td>
-      <td style="text-align:center">8d</td>
-      <td style="text-align:center">$1.249.421</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:27%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#5</strong></td>
-      <td><strong>INVERSIONES LLOZA LIMITADA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Manuela Gámez</span></td>
-      <td class="num" style="color:#c0392b"><strong>$5.837.538</strong></td>
-      <td class="num">4.5%</td>
-      <td class="num"><strong>45.9%</strong></td>
-      <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+34d</span></td>
-      <td class="num">17</td>
-      <td style="text-align:center">20d</td>
-      <td style="text-align:center">$369.494</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:24%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#6</strong></td>
-      <td><strong>Loreto 33 Spa</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Carolina Nicoletti</span></td>
-      <td class="num" style="color:#c0392b"><strong>$5.313.958</strong></td>
-      <td class="num">4.1%</td>
-      <td class="num"><strong>50.0%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-      <td class="num">8</td>
-      <td style="text-align:center">16d</td>
-      <td style="text-align:center">$689.108</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:22%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#7</strong></td>
-      <td><strong>GASTRONOMICA GRUPO SEIS SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Benjamin Diez</span></td>
-      <td class="num" style="color:#c0392b"><strong>$4.522.633</strong></td>
-      <td class="num">3.5%</td>
-      <td class="num"><strong>53.4%</strong></td>
-      <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+99d</span></td>
-      <td class="num">3</td>
-      <td style="text-align:center">57d</td>
-      <td style="text-align:center">$915.033</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:19%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#8</strong></td>
-      <td><strong>SANTIAGO AIRPORT HOTEL SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ricardo Saldias</span></td>
-      <td class="num" style="color:#c0392b"><strong>$4.024.735</strong></td>
-      <td class="num">3.1%</td>
-      <td class="num"><strong>56.5%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+18d</span></td>
-      <td class="num">5</td>
-      <td style="text-align:center">57d</td>
-      <td style="text-align:center">$1.283.382</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:17%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#9</strong></td>
-      <td><strong>MOZART SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$3.809.049</strong></td>
-      <td class="num">2.9%</td>
-      <td class="num"><strong>59.4%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+27d</span></td>
-      <td class="num">5</td>
-      <td style="text-align:center">32d</td>
-      <td style="text-align:center">$974.058</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:16%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#10</strong></td>
-      <td><strong>HOTELES DIRECTOR LIMITADA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ignacio del Solar</span></td>
-      <td class="num" style="color:#c0392b"><strong>$3.130.360</strong></td>
-      <td class="num">2.4%</td>
-      <td class="num"><strong>61.8%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-      <td class="num">8</td>
-      <td style="text-align:center">11d</td>
-      <td style="text-align:center">$376.910</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:13%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#11</strong></td>
-      <td><strong>Fogon del Gaucho Restaurante Limitada</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ricardo Saldias</span></td>
-      <td class="num" style="color:#c0392b"><strong>$3.081.186</strong></td>
-      <td class="num">2.4%</td>
-      <td class="num"><strong>64.2%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-      <td class="num">2</td>
-      <td style="text-align:center">8d</td>
-      <td style="text-align:center">$952.525</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:13%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#12</strong></td>
-      <td><strong>INVERSIONES LA PUNTILLA SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ignacio del Solar</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.771.120</strong></td>
-      <td class="num">2.1%</td>
-      <td class="num"><strong>66.3%</strong></td>
-      <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+69d</span></td>
-      <td class="num">13</td>
-      <td style="text-align:center">22d</td>
-      <td style="text-align:center">$286.932</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:11%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#13</strong></td>
-      <td><strong>Comercial Las Invernadas S.A.</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.679.278</strong></td>
-      <td class="num">2.1%</td>
-      <td class="num"><strong>68.3%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-      <td class="num">1</td>
-      <td style="text-align:center">6d</td>
-      <td style="text-align:center">$6.098.143</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:11%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#14</strong></td>
-      <td><strong>Restaurant La Jardin Ltda</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ignacio del Solar</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.516.390</strong></td>
-      <td class="num">1.9%</td>
-      <td class="num"><strong>70.3%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+9d</span></td>
-      <td class="num">5</td>
-      <td style="text-align:center">10d</td>
-      <td style="text-align:center">$338.083</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:10%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#15</strong></td>
-      <td><strong>MEATFOOD SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.377.620</strong></td>
-      <td class="num">1.8%</td>
-      <td class="num"><strong>72.1%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-      <td class="num">1</td>
-      <td style="text-align:center">3d</td>
-      <td style="text-align:center">$3.056.451</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:10%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#16</strong></td>
-      <td><strong>Pizzeria Tiramisu spa</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Empresa</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.362.339</strong></td>
-      <td class="num">1.8%</td>
-      <td class="num"><strong>73.9%</strong></td>
-      <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+41d</span></td>
-      <td class="num">6</td>
-      <td style="text-align:center">27d</td>
-      <td style="text-align:center">$594.825</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:10%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#17</strong></td>
-      <td><strong>MARTITA SERANI LIMITADA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Benjamin Diez</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.038.131</strong></td>
-      <td class="num">1.6%</td>
-      <td class="num"><strong>75.4%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-      <td class="num">2</td>
-      <td style="text-align:center">8d</td>
-      <td style="text-align:center">$691.836</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:8%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#18</strong></td>
-      <td><strong>Tquila SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Manuela Gámez</span></td>
-      <td class="num" style="color:#c0392b"><strong>$2.025.018</strong></td>
-      <td class="num">1.5%</td>
-      <td class="num"><strong>77.0%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-      <td class="num">6</td>
-      <td style="text-align:center">11d</td>
-      <td style="text-align:center">$309.131</td>
-      <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:8%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#19</strong></td>
-      <td><strong>MISCELANEO SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ricardo Saldias</span></td>
-      <td class="num" style="color:#c0392b"><strong>$1.761.182</strong></td>
-      <td class="num">1.3%</td>
-      <td class="num"><strong>78.3%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-      <td class="num">4</td>
-      <td style="text-align:center">9d</td>
-      <td style="text-align:center">$282.102</td>
-      <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:7%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#20</strong></td>
-      <td><strong>GASTRONOMICA CIUDADANO SPA</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ricardo Saldias</span></td>
-      <td class="num" style="color:#c0392b"><strong>$1.623.152</strong></td>
-      <td class="num">1.2%</td>
-      <td class="num"><strong>79.6%</strong></td>
-      <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+21d</span></td>
-      <td class="num">4</td>
-      <td style="text-align:center">6d</td>
-      <td style="text-align:center">$255.137</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:7%"></div></div></td>
-    </tr><tr >
-      <td style="text-align:center"><strong>#21</strong></td>
-      <td><strong>HOTELERIA DE LOS ANDES S.A</strong></td>
-      <td><span style="background:#e8ecf0;padding:2px 8px;border-radius:10px;font-size:10px">Ricardo Saldias</span></td>
-      <td class="num" style="color:#c0392b"><strong>$1.462.371</strong></td>
-      <td class="num">1.1%</td>
-      <td class="num"><strong>80.7%</strong></td>
-      <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+6d</span></td>
-      <td class="num">1</td>
-      <td style="text-align:center">3d</td>
-      <td style="text-align:center">$309.429</td>
-      <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-      <td><div style="background:#e2e8f0;border-radius:4px;height:8px;width:100%;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:6%"></div></div></td>
-    </tr></tbody>
+      <tbody>${prRows}</tbody>
       <tfoot><tr>
-        <td colspan="3">Subtotal 21 clientes Pareto</td>
-        <td class="num" style="color:#c0392b">$105.454.329</td>
-        <td class="num">80.7%</td>
-        <td class="num"><strong>80.7%</strong></td>
+        <td colspan="3">Subtotal ${pareto.length} clientes Pareto</td>
+        <td class="num" style="color:#c0392b">${fm(pareto.reduce((s,p)=>s+p.saldo,0))}</td>
+        <td class="num">${pareto.reduce((s,p)=>s+p.pct,0).toFixed(1)}%</td>
+        <td class="num"><strong>${pareto.length?pareto[pareto.length-1].pctAcum.toFixed(1):'0'}%</strong></td>
         <td colspan="6"></td>
       </tr></tfoot>
     </table>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SECCIÓN 2: DETALLE POR VENDEDOR
-═══════════════════════════════════════════════════════════ -->
+<!-- ═══ SECCIÓN 2 ═══ -->
 <div class="div"></div>
 <div class="slbl">
   <div class="snum" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">2</div>
   <div>
     <div class="stxt">Sección 2 — Detalle por Ejecutivo de Ventas</div>
-    <div class="ssub">Comisiones (1.5%) · Bloqueos · Gestión preventiva · Corte de comisión: facturas con vencimiento ≤ 25/04/2026</div>
+    <div class="ssub">Comisiones 1.5% · Bloqueos · Alertas preventivas · Corte comisión: ≤ ${fdate(COMM_CUT)}</div>
   </div>
 </div>
-
-<div class="vblock" id="v_Carolina_Nicoletti">
-  <div class="vhdr" style="border-left:5px solid #c0392b">
-    <div>
-      <div class="vname">👤 Carolina Nicoletti</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$19.475.387</strong></span>
-        <span>Mora: <strong style="color:#c0392b">$15.698.802</strong> (81%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$188.080</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$19.475.387</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$2.821</div>
-        <div class="csub">Base: $188.080</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$292.131</div>
-        <div class="csub">Base: $19.475.387</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 4 clientes · $15.698.802</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>El Toro Producciones Spa</strong></td>
-          <td class="num" style="color:#c0392b">$7.684.722</td>
-          <td class="num">9</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+20d</span></td>
-          <td style="text-align:center">19d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>Loreto 33 Spa</strong></td>
-          <td class="num" style="color:#c0392b">$5.313.958</td>
-          <td class="num">8</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-          <td style="text-align:center">16d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>SOCIEDAD GASTRONOMICA DE PATIO SPA</strong></td>
-          <td class="num" style="color:#c0392b">$1.442.392</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+70d</span></td>
-          <td style="text-align:center">40d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>DE STREET SPA</strong></td>
-          <td class="num" style="color:#c0392b">$1.257.730</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (4 clientes · $3.395.996) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>El Toro Producciones Spa</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$1.566.902</td>
-          <td class="num" style="color:#8e44ad">$23.504</td>
-        </tr><tr class="alert-today">
-          <td><strong>OPERADORA QSR SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$1.035.062</td>
-          <td class="num" style="color:#8e44ad">$15.526</td>
-        </tr><tr class="alert-today">
-          <td><strong>Servicios Gastronómicos Francisca Munizaga EIRL</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$582.167</td>
-          <td class="num" style="color:#8e44ad">$8.733</td>
-        </tr><tr class="alert-today">
-          <td><strong>Loreto 33 Spa</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$211.865</td>
-          <td class="num" style="color:#8e44ad">$3.178</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Ricardo_Saldias">
-  <div class="vhdr" style="border-left:5px solid #e67e22">
-    <div>
-      <div class="vname">👤 Ricardo Saldias</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$15.948.683</strong></span>
-        <span>Mora: <strong style="color:#e67e22">$12.401.241</strong> (78%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$527.078</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$15.948.683</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$7.906</div>
-        <div class="csub">Base: $527.078</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$239.230</div>
-        <div class="csub">Base: $15.948.683</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 9 clientes · $12.401.241</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>SANTIAGO AIRPORT HOTEL SPA</strong></td>
-          <td class="num" style="color:#c0392b">$4.024.735</td>
-          <td class="num">5</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+18d</span></td>
-          <td style="text-align:center">57d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>Fogon del Gaucho Restaurante Limitada</strong></td>
-          <td class="num" style="color:#c0392b">$3.081.186</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>MISCELANEO SPA</strong></td>
-          <td class="num" style="color:#c0392b">$1.761.182</td>
-          <td class="num">4</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-          <td style="text-align:center">9d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>GASTRONOMICA CIUDADANO SPA</strong></td>
-          <td class="num" style="color:#c0392b">$1.623.152</td>
-          <td class="num">4</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+21d</span></td>
-          <td style="text-align:center">6d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>HOTELERIA DE LOS ANDES S.A</strong></td>
-          <td class="num" style="color:#c0392b">$1.462.371</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+6d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>QUERCUS SPA</strong></td>
-          <td class="num" style="color:#c0392b">$162.138</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">10d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>Tafamus Chile Spa</strong></td>
-          <td class="num" style="color:#c0392b">$136.823</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>HOTELERA ICON S.A</strong></td>
-          <td class="num" style="color:#c0392b">$93.902</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">1d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>LUKAS FOOD SPA</strong></td>
-          <td class="num" style="color:#c0392b">$55.752</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+6d</span></td>
-          <td style="text-align:center">1d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (6 clientes · $2.783.451) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>GASTRONOMICA CIUDADANO SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$793.532</td>
-          <td class="num" style="color:#8e44ad">$11.903</td>
-        </tr><tr class="alert-today">
-          <td><strong>FURO GROUP SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$641.851</td>
-          <td class="num" style="color:#8e44ad">$9.628</td>
-        </tr><tr class="alert-today">
-          <td><strong>HOTEL CORPORATION OF CHILE S A</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$415.791</td>
-          <td class="num" style="color:#8e44ad">$6.237</td>
-        </tr><tr class="alert-today">
-          <td><strong>HOTELERA ICON S.A</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$391.014</td>
-          <td class="num" style="color:#8e44ad">$5.865</td>
-        </tr><tr class="alert-today">
-          <td><strong>BILBAO RESTOBAR SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$314.874</td>
-          <td class="num" style="color:#8e44ad">$4.723</td>
-        </tr><tr class="alert-today">
-          <td><strong>HOTEL COSTANERA S.A.</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$226.389</td>
-          <td class="num" style="color:#8e44ad">$3.396</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Ignacio_del_Solar">
-  <div class="vhdr" style="border-left:5px solid #e67e22">
-    <div>
-      <div class="vname">👤 Ignacio del Solar</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$21.872.556</strong></span>
-        <span>Mora: <strong style="color:#e67e22">$14.439.046</strong> (66%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$603.690</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$21.872.556</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$9.055</div>
-        <div class="csub">Base: $603.690</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$328.088</div>
-        <div class="csub">Base: $21.872.556</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 17 clientes · $14.439.046</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>HOTELES DIRECTOR LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$3.130.360</td>
-          <td class="num">8</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">11d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES LA PUNTILLA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$2.771.120</td>
-          <td class="num">13</td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+69d</span></td>
-          <td style="text-align:center">22d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>Restaurant La Jardin Ltda</strong></td>
-          <td class="num" style="color:#c0392b">$2.516.390</td>
-          <td class="num">5</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+9d</span></td>
-          <td style="text-align:center">10d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>MARIA ANTONIETA INOSTROZA AHUMADA EIRL</strong></td>
-          <td class="num" style="color:#c0392b">$1.245.177</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+26d</span></td>
-          <td style="text-align:center">30d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES Y SERVICIOS GASTRONOMICOS TARINGA SP</strong></td>
-          <td class="num" style="color:#c0392b">$732.469</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">14d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>TRIVENUE CHILE SPA</strong></td>
-          <td class="num" style="color:#c0392b">$614.882</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-          <td style="text-align:center">7d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES GASTRONOMICAS RM SPA</strong></td>
-          <td class="num" style="color:#c0392b">$408.426</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>ESPACIO V Y D SPA</strong></td>
-          <td class="num" style="color:#c0392b">$403.034</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+9d</span></td>
-          <td style="text-align:center">9d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>Restaurant Administration Center Spa</strong></td>
-          <td class="num" style="color:#c0392b">$384.127</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+9d</span></td>
-          <td style="text-align:center">7d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>EL CARRITO GOURMET LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$332.090</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+9d</span></td>
-          <td style="text-align:center">6d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>SOCIEDAD GASTRONOMICA BARCELONA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$331.909</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>NOVA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$324.297</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>RESTAURANTE LAS CONDES SPA</strong></td>
-          <td class="num" style="color:#c0392b">$310.779</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>FENIX SPA</strong></td>
-          <td class="num" style="color:#c0392b">$250.485</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">11d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>GRUPO LA YUNTA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$248.176</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>HOTELERA PATAGONIA DOS S.A.</strong></td>
-          <td class="num" style="color:#c0392b">$239.601</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">2d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>LA YUNTA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$195.724</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (7 clientes · $3.359.897) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>NOVA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$1.070.152</td>
-          <td class="num" style="color:#8e44ad">$16.052</td>
-        </tr><tr class="alert-today">
-          <td><strong>RIENDA MUT SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$716.735</td>
-          <td class="num" style="color:#8e44ad">$10.751</td>
-        </tr><tr class="alert-today">
-          <td><strong>HOTELERA PATAGONIA DOS S.A.</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$527.745</td>
-          <td class="num" style="color:#8e44ad">$7.916</td>
-        </tr><tr class="alert-today">
-          <td><strong>ESPACIO V Y D SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$373.571</td>
-          <td class="num" style="color:#8e44ad">$5.604</td>
-        </tr><tr class="alert-today">
-          <td><strong>RESTAURANTE LAS CONDES SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$307.962</td>
-          <td class="num" style="color:#8e44ad">$4.619</td>
-        </tr><tr class="alert-today">
-          <td><strong>MILEN SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$246.755</td>
-          <td class="num" style="color:#8e44ad">$3.701</td>
-        </tr><tr class="alert-today">
-          <td><strong>Restaurant La Jardin Ltda</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$116.977</td>
-          <td class="num" style="color:#8e44ad">$1.755</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Benjamin_Diez">
-  <div class="vhdr" style="border-left:5px solid #f39c12">
-    <div>
-      <div class="vname">👤 Benjamin Diez</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$17.886.736</strong></span>
-        <span>Mora: <strong style="color:#f39c12">$11.266.361</strong> (63%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$691.237</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$17.886.736</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$10.369</div>
-        <div class="csub">Base: $691.237</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$268.301</div>
-        <div class="csub">Base: $17.886.736</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 9 clientes · $11.266.361</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>GASTRONOMICA GRUPO SEIS SPA</strong></td>
-          <td class="num" style="color:#c0392b">$4.522.633</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+99d</span></td>
-          <td style="text-align:center">57d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>MARTITA SERANI LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$2.038.131</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>MARIA DE LOS ANGELES ALAMOS Y COMPANIA LTDA</strong></td>
-          <td class="num" style="color:#c0392b">$1.321.383</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-          <td style="text-align:center">9d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>GYG SERVICIOS GASTRONOMICOS LTDA</strong></td>
-          <td class="num" style="color:#c0392b">$1.005.420</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">9d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>BAR COSTANERA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$843.284</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-          <td style="text-align:center">14d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>BAR Y CLUB SOCIAL PDS LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$451.351</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>GASTRONOMIA GRUPO COCOA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$420.140</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">7d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>SOCIEDAD GASTRONOMICA VYTA DOS SPA.</strong></td>
-          <td class="num" style="color:#c0392b">$380.922</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+20d</span></td>
-          <td style="text-align:center">0d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES SAN MARTIN SPA</strong></td>
-          <td class="num" style="color:#c0392b">$283.097</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">10d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (5 clientes · $4.517.588) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>COEXIST SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$2.127.593</td>
-          <td class="num" style="color:#8e44ad">$31.914</td>
-        </tr><tr class="alert-today">
-          <td><strong>SOCIEDAD GASTRONOMICA LA BIFERIA LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$886.223</td>
-          <td class="num" style="color:#8e44ad">$13.293</td>
-        </tr><tr class="alert-today">
-          <td><strong>ARCA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$876.404</td>
-          <td class="num" style="color:#8e44ad">$13.146</td>
-        </tr><tr class="alert-today">
-          <td><strong>LA VINOTECA LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$342.006</td>
-          <td class="num" style="color:#8e44ad">$5.130</td>
-        </tr><tr class="alert-today">
-          <td><strong>SERVICIOS DE ALIMENTACION YOU FOOD SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$285.362</td>
-          <td class="num" style="color:#8e44ad">$4.280</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Manuela_Gámez">
-  <div class="vhdr" style="border-left:5px solid #f39c12">
-    <div>
-      <div class="vname">👤 Manuela Gámez</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$17.352.166</strong></span>
-        <span>Mora: <strong style="color:#f39c12">$11.239.107</strong> (65%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$334.395</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$17.352.166</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$5.016</div>
-        <div class="csub">Base: $334.395</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$260.282</div>
-        <div class="csub">Base: $17.352.166</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 10 clientes · $11.239.107</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>INVERSIONES LLOZA LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$5.837.538</td>
-          <td class="num">17</td>
-          <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+34d</span></td>
-          <td style="text-align:center">20d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>Tquila SPA</strong></td>
-          <td class="num" style="color:#c0392b">$2.025.018</td>
-          <td class="num">6</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-          <td style="text-align:center">11d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>Comercializadora Vientos del Centro</strong></td>
-          <td class="num" style="color:#c0392b">$1.297.409</td>
-          <td class="num">6</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+17d</span></td>
-          <td style="text-align:center">10d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>HOTELERA ST. GERMAIN S.A.</strong></td>
-          <td class="num" style="color:#c0392b">$821.280</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>SERVICIOS GASTRONOMICOS GENERALES SANTA AUGUSTA </strong></td>
-          <td class="num" style="color:#c0392b">$380.438</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>SOCIEDAD GASTRONOMICA KAMEN SPA</strong></td>
-          <td class="num" style="color:#c0392b">$275.918</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">6d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES DOÑA OLGA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$203.947</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>SC LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$170.266</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>DELIA GOURMET SPA.</strong></td>
-          <td class="num" style="color:#c0392b">$138.935</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>TIENDAS LA VINOTECA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$88.358</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (9 clientes · $5.108.518) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>M&M RESTAURANTES SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$831.810</td>
-          <td class="num" style="color:#8e44ad">$12.477</td>
-        </tr><tr class="alert-today">
-          <td><strong>LA FUERZA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$673.805</td>
-          <td class="num" style="color:#8e44ad">$10.107</td>
-        </tr><tr class="alert-today">
-          <td><strong>SERVICIOS GASTRONOMICOS GENERALES SANTA AUGUSTA </strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$670.686</td>
-          <td class="num" style="color:#8e44ad">$10.060</td>
-        </tr><tr class="alert-today">
-          <td><strong>TIENDAS LA VINOTECA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$617.549</td>
-          <td class="num" style="color:#8e44ad">$9.263</td>
-        </tr><tr class="alert-today">
-          <td><strong>KLEIN SERVICIOS SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$532.106</td>
-          <td class="num" style="color:#8e44ad">$7.982</td>
-        </tr><tr class="alert-today">
-          <td><strong>LA MAGIA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$523.118</td>
-          <td class="num" style="color:#8e44ad">$7.847</td>
-        </tr><tr class="alert-today">
-          <td><strong>SOCIEDAD COMERCIAL DON GAVIOTA LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$507.644</td>
-          <td class="num" style="color:#8e44ad">$7.615</td>
-        </tr><tr class="alert-today">
-          <td><strong>COMERCIAL ARQUEADOS DE BARRERA SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$419.195</td>
-          <td class="num" style="color:#8e44ad">$6.288</td>
-        </tr><tr class="alert-today">
-          <td><strong>INVERSIONES LLOZA LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$332.605</td>
-          <td class="num" style="color:#8e44ad">$4.989</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Andrés_Toledo">
-  <div class="vhdr" style="border-left:5px solid #f39c12">
-    <div>
-      <div class="vname">👤 Andrés Toledo</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$7.263.643</strong></span>
-        <span>Mora: <strong style="color:#f39c12">$4.188.494</strong> (58%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$0</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$7.263.643</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$0</div>
-        <div class="csub">Base: $0</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$108.955</div>
-        <div class="csub">Base: $7.263.643</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="sub-t">🚫 Clientes Bloqueados — 11 clientes · $4.188.494</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>INVERSIONES ANDESMART SPA</strong></td>
-          <td class="num" style="color:#c0392b">$1.010.504</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+6d</span></td>
-          <td style="text-align:center">—</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>MANUEL IGNACIO CUBILLOS CUBILLOS</strong></td>
-          <td class="num" style="color:#c0392b">$576.486</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">2d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>JUAN HECTOR LENIZ LENIZ</strong></td>
-          <td class="num" style="color:#c0392b">$514.151</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+11d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES Y GASTRONOMICA H Y H SPA</strong></td>
-          <td class="num" style="color:#c0392b">$430.483</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>DISTRIBUIDORA CARNICAS JK SPA</strong></td>
-          <td class="num" style="color:#c0392b">$393.523</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>COMERCIAL GUZMAN SPA</strong></td>
-          <td class="num" style="color:#c0392b">$333.543</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>SABORES NACIONALES SPA</strong></td>
-          <td class="num" style="color:#c0392b">$256.255</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">1d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>CLARA DEL TRANSITO CARDENAS NARANJO</strong></td>
-          <td class="num" style="color:#c0392b">$208.862</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+11d</span></td>
-          <td style="text-align:center">—</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>RESTAURANT S&S LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$196.112</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+5d</span></td>
-          <td style="text-align:center">4d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>EBER IVAN ZARATE CORONEL</strong></td>
-          <td class="num" style="color:#c0392b">$194.803</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">2d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>MARTIN CONDOR TAIPE</strong></td>
-          <td class="num" style="color:#c0392b">$73.772</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+7d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (3 clientes · $1.744.372) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>DARKOLICS RESTOBAR SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$958.810</td>
-          <td class="num" style="color:#8e44ad">$14.382</td>
-        </tr><tr class="alert-today">
-          <td><strong>EMPRESA R. ROJAS RENCORET SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$461.049</td>
-          <td class="num" style="color:#8e44ad">$6.916</td>
-        </tr><tr class="alert-today">
-          <td><strong>RESTAURANT S&S LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$324.513</td>
-          <td class="num" style="color:#8e44ad">$4.868</td>
-        </tr></tbody>
-  </table>
-</div>
-<div class="vblock" id="v_Empresa">
-  <div class="vhdr" style="border-left:5px solid #c0392b">
-    <div>
-      <div class="vname">🏢 Empresa (sin vendedor)</div>
-      <div class="vstats">
-        <span>Cartera: <strong>$71.729.682</strong></span>
-        <span>Mora: <strong style="color:#c0392b">$61.433.274</strong> (86%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">$3.881.451</strong></span>
-        <span>Bajo corte (≤25 Abr): <strong>$71.729.682</strong></span>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <div class="cbox">
-        <div class="clbl">💰 Com. s/Cobrado</div>
-        <div class="cval">$58.222</div>
-        <div class="csub">Base: $3.881.451</div>
-      </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25Abr</div>
-        <div class="cval">$1.075.945</div>
-        <div class="csub">Base: $71.729.682</div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px 14px;border-radius:6px;font-size:11px;margin-bottom:14px;color:#856404">⚠️ Cartera sin ejecutivo asignado. Requiere reasignación urgente.</div>
-  <div class="sub-t">🚫 Clientes Bloqueados — 14 clientes · $61.433.274</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th class="num">Deuda Vencida</th><th class="num">Facturas</th>
-      <th style="text-align:center">Retraso Act.</th><th style="text-align:center">Días Prom. Pago</th>
-      <th style="text-align:center">Perfil Riesgo</th>
-    </tr></thead>
-    <tbody><tr>
-          <td><strong>BETTER FOOD SPA</strong></td>
-          <td class="num" style="color:#c0392b">$24.198.670</td>
-          <td class="num">7</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+18d</span></td>
-          <td style="text-align:center">14d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>COMERCIAL PEDRO DE VALDIVIA SPA</strong></td>
-          <td class="num" style="color:#c0392b">$15.650.464</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+13d</span></td>
-          <td style="text-align:center">11d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>DISTRIBUIDORA MERCANTE SPA</strong></td>
-          <td class="num" style="color:#c0392b">$6.584.413</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+12d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>MOZART SPA</strong></td>
-          <td class="num" style="color:#c0392b">$3.809.049</td>
-          <td class="num">5</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+27d</span></td>
-          <td style="text-align:center">32d</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr><tr>
-          <td><strong>Comercial Las Invernadas S.A.</strong></td>
-          <td class="num" style="color:#c0392b">$2.679.278</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">6d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>MEATFOOD SPA</strong></td>
-          <td class="num" style="color:#c0392b">$2.377.620</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+3d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>Pizzeria Tiramisu spa</strong></td>
-          <td class="num" style="color:#c0392b">$2.362.339</td>
-          <td class="num">6</td>
-          <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+41d</span></td>
-          <td style="text-align:center">27d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>MIT 5 SPA.</strong></td>
-          <td class="num" style="color:#c0392b">$1.172.367</td>
-          <td class="num">4</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+21d</span></td>
-          <td style="text-align:center">1d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>Comercial RyV SA</strong></td>
-          <td class="num" style="color:#c0392b">$1.137.285</td>
-          <td class="num">3</td>
-          <td style="text-align:center"><span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+43d</span></td>
-          <td style="text-align:center">12d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>MIT 4 SPA</strong></td>
-          <td class="num" style="color:#c0392b">$610.125</td>
-          <td class="num">2</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+10d</span></td>
-          <td style="text-align:center">5d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>INVERSIONES OZ SPA</strong></td>
-          <td class="num" style="color:#c0392b">$380.332</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+11d</span></td>
-          <td style="text-align:center">3d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>ALIMENTOS IZCO LIMITADA</strong></td>
-          <td class="num" style="color:#c0392b">$258.392</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#ebf5fb;color:#1a5276;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+4d</span></td>
-          <td style="text-align:center">—</td>
-          <td><span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span></td>
-        </tr><tr>
-          <td><strong>JJDELIVERY SPA</strong></td>
-          <td class="num" style="color:#c0392b">$177.786</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+14d</span></td>
-          <td style="text-align:center">8d</td>
-          <td><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span></td>
-        </tr><tr>
-          <td><strong>Raimundo Diez</strong></td>
-          <td class="num" style="color:#c0392b">$35.154</td>
-          <td class="num">1</td>
-          <td style="text-align:center"><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+20d</span></td>
-          <td style="text-align:center">—</td>
-          <td><span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span></td>
-        </tr></tbody>
-  </table>
-  <div class="sub-t" style="margin-top:16px">⏰ Alertas Preventivas — Vencen HOY (4 clientes · $10.296.408) — Gestionar antes de las 17:00 hs</div>
-  <table>
-    <thead><tr>
-      <th>Cliente</th><th style="text-align:center">Vencimiento</th><th style="text-align:center">Estado</th>
-      <th class="num">Monto</th><th class="num">Com. en Juego</th>
-    </tr></thead>
-    <tbody><tr class="alert-today">
-          <td><strong>COMERCIALIZADORA ALIVA LIMITADA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$6.702.706</td>
-          <td class="num" style="color:#8e44ad">$100.541</td>
-        </tr><tr class="alert-today">
-          <td><strong>INVERSIONES OZ SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$2.606.465</td>
-          <td class="num" style="color:#8e44ad">$39.097</td>
-        </tr><tr class="alert-today">
-          <td><strong>MOZART SPA</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$740.193</td>
-          <td class="num" style="color:#8e44ad">$11.103</td>
-        </tr><tr class="alert-today">
-          <td><strong>Gastronomia y Eventos Diaz Ltda</strong></td>
-          <td style="text-align:center"><strong>22/04/2026</strong></td>
-          <td style="text-align:center"><span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⏰ HOY</span></td>
-          <td class="num" style="color:#e67e22">$247.044</td>
-          <td class="num" style="color:#8e44ad">$3.706</td>
-        </tr></tbody>
-  </table>
-</div>
+${vendorSections}
 
 </div>
-<div class="footer">COMERCIAL GESTAPACK SPA · Sistema Kame · 22/04/2026 · Criterio mora ≥3d · Comisión 1.5% · Corte ≤25/04/2026</div>
+<div class="footer">COMERCIAL GESTAPACK SPA · Sistema Kame · Corte ${fTodayShort} · Bloqueo ≥3d · Comisión 1.5% · Corte ≤${fdate(COMM_CUT)}</div>`;
+
+  document.getElementById('dashboard').innerHTML = html;
+  document.getElementById('upload-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// MAIN
+// ═══════════════════════════════════════════════════════════
+function generateDashboard() {
+  document.getElementById('spinner').style.display = 'flex';
+  setTimeout(() => {
+    try {
+      const data = analyse(fileCXC, fileCOB);
+      renderDashboard(data);
+    } catch(err) {
+      alert('Error procesando archivos: ' + err.message);
+      console.error(err);
+    }
+    document.getElementById('spinner').style.display = 'none';
+  }, 80);
+}
+
+function resetApp() {
+  fileCXC = null; fileCOB = null;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('dashboard').innerHTML = '';
+  document.getElementById('upload-screen').style.display = 'flex';
+  document.getElementById('gen-btn').disabled = true;
+  ['dz-cxc','dz-cob'].forEach(id=>{
+    const dz=document.getElementById(id);
+    dz.classList.remove('loaded','error');
+  });
+  ['st-cxc','st-cob'].forEach(id=>document.getElementById(id).textContent='');
+}
+
+// On load: hide spinner, show upload
+window.addEventListener('load', () => {
+  document.getElementById('spinner').style.display = 'none';
+  document.getElementById('upload-screen').style.display = 'flex';
+});
+</script>
 </body>
 </html>
