@@ -54,6 +54,15 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#eef1f5;color:#1a1a2e;fo
 .kv{font-size:22px;font-weight:900;color:#1a1a2e;line-height:1}.ks{font-size:10px;color:#bdc3c7;margin-top:5px}
 .kpill{display:inline-block;background:#fdecea;color:#c0392b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:5px}
 
+/* AGING BREAKDOWN (Cartera Vencida) */
+.agebar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin-bottom:16px;background:#eef1f5}
+.agebar div{transition:width .3s}
+.agebadges{display:flex;gap:14px;flex-wrap:wrap}
+.agebadge{flex:1;min-width:200px;padding:12px 16px;border-radius:10px;border-left:4px solid #ccc}
+.agebadge .al{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.agebadge .av{font-size:18px;font-weight:900;color:#1a1a2e}
+.agebadge .as{font-size:10px;color:#7f8c8d;margin-top:4px}
+
 /* CARDS */
 .card{background:#fff;border-radius:12px;padding:22px 26px;margin-bottom:22px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 .card0{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:22px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
@@ -144,6 +153,7 @@ tfoot td.num{text-align:right;font-family:monospace}
 let fileCXC = null, fileCOB = null;
 const CR = 0.015;   // commission rate
 const BLOCK = 3;    // days to block
+const CRIT_DAYS = 10; // days threshold for "Cobranza Crítica"
 
 // ═══════════════════════════════════════════════════════════
 // CSV PARSER
@@ -302,6 +312,14 @@ function analyse(cxcText, cobText) {
   for (const r in histDL)  avgDays[r] = histDL[r].reduce((a,b)=>a+b,0)/histDL[r].length;
   for (const r in histMnt) avgSale[r] = histMnt[r].reduce((a,b)=>a+b,0)/histMnt[r].length;
 
+  // ── Atrasos reiterados: % de cobros históricos del cliente con >3d de retraso ──
+  const pctReiterado = {};
+  for (const r in histDL) {
+    const arr = histDL[r];
+    const lateCount = arr.filter(d=>d>3).length;
+    pctReiterado[r] = arr.length ? lateCount/arr.length*100 : 0;
+  }
+
   // ── KPIs ───────────────────────────────────────────────
   const totalSaldo    = cxc.reduce((s,r)=>s+r.saldo,0);
   const totalMora     = cxc.filter(r=>r.bloq).reduce((s,r)=>s+r.saldo,0);
@@ -312,6 +330,23 @@ function analyse(cxcText, cobText) {
   const cobradoSemana = cobros.filter(c=>c.fecha>=weekStart && c.fecha<=TODAY).reduce((s,c)=>s+c.monto,0);
   const veniceHoy     = cxc.filter(r=>r.alertF).reduce((s,r)=>s+r.saldo,0);
   const numBloq       = new Set(cxc.filter(r=>r.bloq).map(r=>r.rut)).size;
+
+  // ── Nuevas categorías KPI Sección 1 (feedback equipo cobranza) ──
+  const totalVencida     = cxc.filter(r=>r.dias>0).reduce((s,r)=>s+r.saldo,0);
+  const totalPorVencer   = cxc.filter(r=>r.dias===0).reduce((s,r)=>s+r.saldo,0);
+  const totalCritica     = cxc.filter(r=>r.dias>CRIT_DAYS).reduce((s,r)=>s+r.saldo,0);
+  const numVencidas      = cxc.filter(r=>r.dias>0).length;
+  const numCriticas      = cxc.filter(r=>r.dias>CRIT_DAYS).length;
+  const clientesVencidos = new Set(cxc.filter(r=>r.dias>0).map(r=>r.rut)).size;
+  const clientesCriticos = new Set(cxc.filter(r=>r.dias>CRIT_DAYS).map(r=>r.rut)).size;
+
+  // ── Tramos de antigüedad dentro de Cartera Vencida (badges 1-5d / 6-10d) ──
+  const totalAtrasoInicial    = cxc.filter(r=>r.dias>=1 && r.dias<=5).reduce((s,r)=>s+r.saldo,0);
+  const totalAtrasoRiesgo     = cxc.filter(r=>r.dias>=6 && r.dias<=CRIT_DAYS).reduce((s,r)=>s+r.saldo,0);
+  const numAtrasoInicial      = cxc.filter(r=>r.dias>=1 && r.dias<=5).length;
+  const numAtrasoRiesgo       = cxc.filter(r=>r.dias>=6 && r.dias<=CRIT_DAYS).length;
+  const clientesAtrasoInicial = new Set(cxc.filter(r=>r.dias>=1 && r.dias<=5).map(r=>r.rut)).size;
+  const clientesAtrasoRiesgo  = new Set(cxc.filter(r=>r.dias>=6 && r.dias<=CRIT_DAYS).map(r=>r.rut)).size;
 
   // ── Pareto 80% ─────────────────────────────────────────
   const cliAgg = {};
@@ -324,6 +359,13 @@ function analyse(cxcText, cobText) {
     cliAgg[r.rut].facturas += 1;
   }
   const moraSorted = Object.entries(cliAgg).sort((a,b)=>b[1].saldo-a[1].saldo);
+
+  // Percentil del monto vencido de cada cliente dentro de la cartera en mora
+  // (usado como insumo del Perfil de Riesgo: a mayor monto vencido relativo, mayor percentil)
+  const saldoPercentile = {};
+  const saldosAsc = Object.entries(cliAgg).map(([rut,d])=>({rut,saldo:d.saldo})).sort((a,b)=>a.saldo-b.saldo);
+  saldosAsc.forEach((v,i)=>{ saldoPercentile[v.rut] = saldosAsc.length>1 ? (i/(saldosAsc.length-1))*100 : 100; });
+
   const pareto = []; let acum = 0;
   for (const [rut, d] of moraSorted) {
     acum += d.saldo;
@@ -357,7 +399,11 @@ function analyse(cxcText, cobText) {
 
   return {TODAY, COMM_CUT, cxc, cobros, totalSaldo, totalMora, totalCobCXC,
           pctMora, cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
-          vData, VENDOR_ORDER, avgDays, avgSale};
+          vData, VENDOR_ORDER, avgDays, avgSale,
+          totalVencida, totalPorVencer, totalCritica, numVencidas, numCriticas,
+          clientesVencidos, clientesCriticos, saldoPercentile, pctReiterado,
+          totalAtrasoInicial, totalAtrasoRiesgo, numAtrasoInicial, numAtrasoRiesgo,
+          clientesAtrasoInicial, clientesAtrasoRiesgo};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -370,12 +416,29 @@ function daysBadge(d){
   return `<span style="background:${c[1]};color:${c[0]};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">+${d}d</span>`;
 }
 
-function riskBadge(alerta, dias){
-  if(alerta) return '<span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">⚠️ ALERTA TEMPRANA</span>';
-  if(dias>=60) return '<span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🔴 MUY CRÍTICO</span>';
-  if(dias>=30) return '<span style="background:#fef5e7;color:#d35400;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟠 CRÍTICO</span>';
-  if(dias>=14) return '<span style="background:#fefde7;color:#b7950b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟡 RIESGO</span>';
-  return '<span style="background:#eafaf1;color:#1e8449;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">🟢 LEVE</span>';
+// ── Perfil de Riesgo compuesto ──────────────────────────────
+// Combina 3 factores solicitados por el equipo de cobranza:
+//   1. Días de retraso actual (peso 45%)
+//   2. Monto vencido, expresado como percentil dentro de la cartera en mora (peso 30%)
+//   3. Atrasos reiterados: % de cobros históricos del cliente con >3d de retraso (peso 25%)
+function riskScore(dias, saldoPct, pctReit){
+  const sDias  = Math.min(Math.max(dias,0)/60*100, 100);
+  const sMonto = saldoPct != null ? saldoPct : 50;
+  const sReit  = pctReit  != null ? pctReit  : 0;
+  return sDias*0.45 + sMonto*0.30 + sReit*0.25;
+}
+
+function riskBadge(dias, saldoPct, pctReit, alertaT){
+  const score = riskScore(dias, saldoPct, pctReit);
+  let lvl;
+  if(score>=70)      lvl=['🔴 CRÍTICO','#c0392b','#fdecea'];
+  else if(score>=50) lvl=['🟠 ALTO','#d35400','#fef5e7'];
+  else if(score>=28) lvl=['🟡 MEDIO','#b7950b','#fefde7'];
+  else               lvl=['🟢 BAJO','#1e8449','#eafaf1'];
+  const tip = `Días de retraso: ${Math.round(dias)}d · Monto vencido (percentil cartera en mora): ${Math.round(saldoPct||0)} · Atrasos reiterados (hist.): ${Math.round(pctReit||0)}%`;
+  let html = `<span title="${tip}" style="background:${lvl[2]};color:${lvl[1]};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;cursor:help">${lvl[0]}</span>`;
+  if(alertaT) html += ` <span style="background:#fdecea;color:#c0392b;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:3px">⚠️ ALERTA TEMPRANA</span>`;
+  return html;
 }
 
 function statusBadge(p){
@@ -391,7 +454,7 @@ function fmths(d){if(!d)return'—';return d.toLocaleDateString('es-CL',{day:'2-
 // ═══════════════════════════════════════════════════════════
 // VENDOR BLOCK
 // ═══════════════════════════════════════════════════════════
-function vendorBlock(v, d, avgDays, avgSale) {
+function vendorBlock(v, d, avgDays, avgSale, saldoPercentile, pctReiterado) {
   const mp = d.cartera ? d.mora/d.cartera*100 : 0;
   const col = hc(mp);
   const commCob  = d.cobrado * CR;
@@ -407,7 +470,7 @@ function vendorBlock(v, d, avgDays, avgSale) {
       <td class="num">${cd.facturas}</td>
       <td style="text-align:center">${daysBadge(cd.diasMax)}</td>
       <td style="text-align:center">${ad!=null?Math.round(ad)+'d':'—'}</td>
-      <td>${riskBadge(alerta, cd.diasMax)}</td>
+      <td>${riskBadge(cd.diasMax, saldoPercentile[rut], pctReiterado[rut], alerta)}</td>
     </tr>`;
   }).join('');
   if(!moraRows) moraRows=`<tr class="no-data"><td colspan="6">✅ Sin clientes bloqueados</td></tr>`;
@@ -484,7 +547,11 @@ function vendorBlock(v, d, avgDays, avgSale) {
 function renderDashboard(data) {
   const {TODAY, COMM_CUT, cxc, totalSaldo, totalMora, totalCobCXC, pctMora,
          cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
-         vData, VENDOR_ORDER, avgDays, avgSale} = data;
+         vData, VENDOR_ORDER, avgDays, avgSale,
+         totalVencida, totalPorVencer, totalCritica, numVencidas, numCriticas,
+         clientesVencidos, clientesCriticos, saldoPercentile, pctReiterado,
+         totalAtrasoInicial, totalAtrasoRiesgo, numAtrasoInicial, numAtrasoRiesgo,
+         clientesAtrasoInicial, clientesAtrasoRiesgo} = data;
 
   const fToday = fmths(TODAY);
   const fTodayShort = fdate(TODAY);
@@ -529,7 +596,7 @@ function renderDashboard(data) {
       <td class="num">${p.facturas}</td>
       <td style="text-align:center">${p.avgD!=null?Math.round(p.avgD)+'d':'—'}</td>
       <td style="text-align:center">${p.avgS?fm(Math.round(p.avgS)):'—'}</td>
-      <td>${riskBadge(p.alertaT, p.diasMax)}</td>
+      <td>${riskBadge(p.diasMax, saldoPercentile[p.rut], pctReiterado[p.rut], p.alertaT)}</td>
       <td><div style="background:#e2e8f0;border-radius:4px;height:8px;min-width:60px"><div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#c0392b,#e74c3c);width:${bw}%"></div></div></td>
     </tr>`;
   }).join('');
@@ -541,7 +608,7 @@ function renderDashboard(data) {
 
   // ── Vendor sections ──
   const vendorSections = VENDOR_ORDER.filter(v=>vData[v]).map(v=>
-    vendorBlock(v, vData[v], avgDays, avgSale)
+    vendorBlock(v, vData[v], avgDays, avgSale, saldoPercentile, pctReiterado)
   ).join('');
 
   const html = `
@@ -578,14 +645,14 @@ function renderDashboard(data) {
   </div>
   <div class="kgrid">
     <div class="kpi r">
-      <div class="ki">💼</div><div class="kl">Cartera Total Pendiente</div>
-      <div class="kv">${fm(totalSaldo)}</div>
-      <div class="ks">${cxc.length} facturas · ${new Set(cxc.map(r=>r.rut)).size} clientes</div>
+      <div class="ki">📕</div><div class="kl">Cartera Vencida</div>
+      <div class="kv">${fm(totalVencida)}</div>
+      <div class="ks">${numVencidas} facturas vencidas · ${clientesVencidos} clientes</div>
     </div>
     <div class="kpi o">
-      <div class="ki">⚠️</div><div class="kl">Total en Mora (≥3 días)</div>
-      <div class="kv">${fm(totalMora)}</div>
-      <div class="kpill">${pctMora.toFixed(1)}% cartera · ${numBloq} clientes</div>
+      <div class="ki">🔥</div><div class="kl">Cobranza Crítica (+${CRIT_DAYS} días)</div>
+      <div class="kv">${fm(totalCritica)}</div>
+      <div class="kpill">${totalVencida?(totalCritica/totalVencida*100).toFixed(1):'0.0'}% de la cartera vencida · ${numCriticas} facturas · ${clientesCriticos} clientes</div>
     </div>
     <div class="kpi g">
       <div class="ki">✅</div><div class="kl">Cobrado Esta Semana</div>
@@ -598,9 +665,36 @@ function renderDashboard(data) {
       <div class="ks">Caen en mora si no se cobran hoy</div>
     </div>
     <div class="kpi p">
-      <div class="ki">💚</div><div class="kl">Cartera Sana</div>
-      <div class="kv">${fm(totalSaldo-totalMora)}</div>
-      <div class="ks">${(100-pctMora).toFixed(1)}% sin retraso significativo</div>
+      <div class="ki">📗</div><div class="kl">Cartera por Vencer</div>
+      <div class="kv">${fm(totalPorVencer)}</div>
+      <div class="ks">${totalSaldo?(totalPorVencer/totalSaldo*100).toFixed(1):'0.0'}% de la cartera total · vencimiento hoy o futuro</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:13px;font-weight:700;margin-bottom:4px">Antigüedad de la Cartera Vencida</div>
+    <div style="font-size:11px;color:#95a5a6;margin-bottom:14px">Desglose de ${fm(totalVencida)} vencidos por tramo de días de atraso</div>
+    <div class="agebar">
+      <div style="width:${totalVencida?(totalAtrasoInicial/totalVencida*100):0}%;background:#f1c40f" title="Atraso Inicial (1-5d): ${fm(totalAtrasoInicial)}"></div>
+      <div style="width:${totalVencida?(totalAtrasoRiesgo/totalVencida*100):0}%;background:#e67e22" title="Atraso en Riesgo (6-10d): ${fm(totalAtrasoRiesgo)}"></div>
+      <div style="width:${totalVencida?(totalCritica/totalVencida*100):0}%;background:#c0392b" title="Cobranza Crítica (+${CRIT_DAYS}d): ${fm(totalCritica)}"></div>
+    </div>
+    <div class="agebadges">
+      <div class="agebadge" style="background:#fefbe8;border-left-color:#f1c40f">
+        <div class="al" style="color:#b7950b">🟡 Atraso Inicial (1-5 días)</div>
+        <div class="av">${fm(totalAtrasoInicial)}</div>
+        <div class="as">${numAtrasoInicial} facturas · ${clientesAtrasoInicial} clientes · ${totalVencida?(totalAtrasoInicial/totalVencida*100).toFixed(1):'0.0'}% de cartera vencida</div>
+      </div>
+      <div class="agebadge" style="background:#fef5e7;border-left-color:#e67e22">
+        <div class="al" style="color:#d35400">🟠 Atraso en Riesgo (6-10 días)</div>
+        <div class="av">${fm(totalAtrasoRiesgo)}</div>
+        <div class="as">${numAtrasoRiesgo} facturas · ${clientesAtrasoRiesgo} clientes · ${totalVencida?(totalAtrasoRiesgo/totalVencida*100).toFixed(1):'0.0'}% de cartera vencida</div>
+      </div>
+      <div class="agebadge" style="background:#fdecea;border-left-color:#c0392b">
+        <div class="al" style="color:#c0392b">🔴 Cobranza Crítica (+${CRIT_DAYS} días)</div>
+        <div class="av">${fm(totalCritica)}</div>
+        <div class="as">${numCriticas} facturas · ${clientesCriticos} clientes · ${totalVencida?(totalCritica/totalVencida*100).toFixed(1):'0.0'}% de cartera vencida</div>
+      </div>
     </div>
   </div>
 
@@ -639,8 +733,10 @@ function renderDashboard(data) {
     <div class="pnote-icon">⚡</div>
     <div>Solo <strong>${pareto.length} de ${moraSorted.length} clientes bloqueados</strong> concentran el
     <strong>80% del monto en mora (${fm(totalMora)})</strong>. Gestionar este grupo es la acción de mayor impacto.
-    La columna <em>Días Prom. Pago</em> refleja el historial real del cliente; si el retraso actual supera ese
-    promedio ×1.5, se activa la <strong>⚠️ Alerta Temprana</strong>.</div>
+    El <strong>Perfil de Riesgo</strong> combina tres factores: días de retraso actual, monto vencido (percentil
+    dentro de la cartera en mora) y % de atrasos reiterados en el historial de pagos del cliente — pasa el cursor
+    sobre cada badge para ver el detalle. Adicionalmente, si el retraso actual supera en 1.5× el promedio histórico
+    del cliente, se marca <strong>⚠️ Alerta Temprana</strong>.</div>
   </div>
   <div class="card0">
     <table>
