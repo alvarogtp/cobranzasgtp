@@ -151,6 +151,7 @@ tfoot td.num{text-align:right;font-family:monospace}
 // STATE
 // ═══════════════════════════════════════════════════════════
 let fileCXC = null, fileCOB = null;
+let currentRefDate = null;   // ISO string "YYYY-MM-DD" de la última consulta
 const CR = 0.015;   // commission rate
 const BLOCK = 3;    // days to block
 const CRIT_DAYS = 10; // days threshold for "Cobranza Crítica"
@@ -256,19 +257,29 @@ function setDZStatus(dzId, stId, msg, ok) {
 // ═══════════════════════════════════════════════════════════
 // CORE ANALYSIS
 // ═══════════════════════════════════════════════════════════
-function analyse(cxcText, cobText) {
+function analyse(cxcText, cobText, refDate) {
 
   // ── Parse CXC ──────────────────────────────────────────
   const cxcRows = parseCSV(cxcText);
-  // Extract TODAY from header line 2: "FECHA DE VENCIMIENTO: ... hasta DD/MM/YYYY"
-  let TODAY = new Date();
-  for (let i = 0; i < Math.min(5, cxcRows.length); i++) {
-    const line = cxcRows[i].join(' ');
-    const m = line.match(/hasta\s+(\d{2}\/\d{2}\/\d{4})/i);
-    if (m) { TODAY = pd(m[1]); break; }
+  // Fecha de consulta: usa refDate si la recibe; sino intenta leerla del encabezado del CXC; sino hoy
+  let TODAY = refDate || null;
+  if (!TODAY) {
+    for (let i = 0; i < Math.min(5, cxcRows.length); i++) {
+      const line = cxcRows[i].join(' ');
+      const m = line.match(/hasta\s+(\d{2}\/\d{2}\/\d{4})/i);
+      if (m) { TODAY = pd(m[1]); break; }
+    }
+    if (!TODAY) TODAY = new Date();
   }
 
-  const COMM_CUT = new Date(TODAY.getFullYear(), TODAY.getMonth(), 25); // 25th of current month
+  // Mes móvil de comisiones: del 26 del mes anterior al 25 del mes actual.
+  // Si hoy ya pasó el 25, el período activo es del 26 del mes actual al 25 del siguiente.
+  const COMM_CUT = TODAY.getDate() <= 25
+    ? new Date(TODAY.getFullYear(), TODAY.getMonth(),     25)
+    : new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 25);
+  const PERIODO_START = TODAY.getDate() <= 25
+    ? new Date(TODAY.getFullYear(), TODAY.getMonth() - 1, 26)
+    : new Date(TODAY.getFullYear(), TODAY.getMonth(),     26);
 
   const cxc = [];
   let dataStart = false;
@@ -297,7 +308,8 @@ function analyse(cxcText, cobText) {
     const monto = ci(row[10]);
     const venc = pd(row[9]);
     const dl = (venc && fecha > venc) ? dateDiff(fecha, venc) : 0;
-    cobros.push({fecha, rut, monto, venc, dl});
+    const vendCob = (row[7]||'Empresa').trim();
+    cobros.push({fecha, rut, monto, venc, dl, vendedor: vendCob});
   }
 
   // ── Historical payment profile ─────────────────────────
@@ -383,10 +395,17 @@ function analyse(cxcText, cobText) {
   const vData = {};
   for (const r of cxc) {
     const v = r.vendedor;
-    if (!vData[v]) vData[v]={cartera:0,mora:0,cobrado:0,bajoCorte:0,cliMora:{},alertas:[]};
+    if (!vData[v]) vData[v]={cartera:0,mora:0,cobrado:0,bajoCorte:0,cliMora:{},alertas:[],
+                              vencida:0,porVencer:0,atrasoInicial:0,atrasoRiesgo:0,critica:0,cobradoPeriodo:0};
     vData[v].cartera += r.saldo;
     vData[v].cobrado += r.tc;
     if (r.enCorte) vData[v].bajoCorte += r.saldo;
+    // Clasificación por tramo de antigüedad
+    if (r.dias > 0)  vData[v].vencida    += r.saldo;
+    else             vData[v].porVencer   += r.saldo;
+    if (r.dias>=1 && r.dias<=5)          vData[v].atrasoInicial += r.saldo;
+    if (r.dias>=6 && r.dias<=CRIT_DAYS)  vData[v].atrasoRiesgo  += r.saldo;
+    if (r.dias>CRIT_DAYS)                vData[v].critica        += r.saldo;
     if (r.bloq) {
       vData[v].mora += r.saldo;
       if (!vData[v].cliMora[r.rut]) vData[v].cliMora[r.rut]={saldo:0,nombre:r.cliente,diasMax:0,facturas:0};
@@ -397,13 +416,39 @@ function analyse(cxcText, cobText) {
     if (r.alertF) vData[v].alertas.push(r);
   }
 
-  return {TODAY, COMM_CUT, cxc, cobros, totalSaldo, totalMora, totalCobCXC,
+  // ── Mapa RUT → Vendedor (CXC es la fuente autoritativa; cobros como respaldo) ──
+  const rutToVend = {};
+  for (const r of cxc) {
+    if (!rutToVend[r.rut]) rutToVend[r.rut] = r.vendedor;
+  }
+  // Complementar con columna de cobros para clientes sin saldo CXC activo
+  for (const c of cobros) {
+    if (!rutToVend[c.rut] && c.vendedor && c.vendedor !== 'Empresa') {
+      rutToVend[c.rut] = c.vendedor;
+    }
+  }
+
+  // ── Cobrado en el mes móvil activo por vendedor (PERIODO_START → COMM_CUT) ──
+  const cobByVend = {};
+  for (const c of cobros) {
+    if (c.fecha < PERIODO_START || c.fecha > COMM_CUT) continue;
+    const key = rutToVend[c.rut] || 'Empresa';
+    cobByVend[key] = (cobByVend[key]||0) + c.monto;
+  }
+  for (const v in vData) vData[v].cobradoPeriodo = cobByVend[v]||0;
+
+  // Fechas del período activo (para mostrar en el dashboard)
+  const cobDesde = PERIODO_START;
+  const cobHasta = COMM_CUT;
+
+  return {TODAY, COMM_CUT, PERIODO_START, cxc, cobros, totalSaldo, totalMora, totalCobCXC,
           pctMora, cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
           vData, VENDOR_ORDER, avgDays, avgSale,
           totalVencida, totalPorVencer, totalCritica, numVencidas, numCriticas,
           clientesVencidos, clientesCriticos, saldoPercentile, pctReiterado,
           totalAtrasoInicial, totalAtrasoRiesgo, numAtrasoInicial, numAtrasoRiesgo,
-          clientesAtrasoInicial, clientesAtrasoRiesgo};
+          clientesAtrasoInicial, clientesAtrasoRiesgo,
+          cobDesde, cobHasta};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -454,11 +499,23 @@ function fmths(d){if(!d)return'—';return d.toLocaleDateString('es-CL',{day:'2-
 // ═══════════════════════════════════════════════════════════
 // VENDOR BLOCK
 // ═══════════════════════════════════════════════════════════
-function vendorBlock(v, d, avgDays, avgSale, saldoPercentile, pctReiterado) {
-  const mp = d.cartera ? d.mora/d.cartera*100 : 0;
+function vendorBlock(v, d, avgDays, avgSale, saldoPercentile, pctReiterado, cobDesde, cobHasta) {
+  const mp  = d.cartera ? d.mora/d.cartera*100 : 0;
   const col = hc(mp);
-  const commCob  = d.cobrado * CR;
-  const commPend = d.bajoCorte * CR;
+
+  // Comisiones
+  const commRecaudada  = d.cobradoPeriodo * CR;
+  const commPorRecaudar = d.cartera * CR;
+
+  // Mini barra antigüedad vencida
+  const vBarInicial = d.vencida ? (d.atrasoInicial/d.vencida*100).toFixed(1) : 0;
+  const vBarRiesgo  = d.vencida ? (d.atrasoRiesgo /d.vencida*100).toFixed(1) : 0;
+  const vBarCritica = d.vencida ? (d.critica       /d.vencida*100).toFixed(1) : 0;
+
+  // Período de cobros
+  const periodoStr = cobDesde && cobHasta
+    ? `${fdate(cobDesde)} – ${fdate(cobHasta)}`
+    : 'período del informe';
 
   const cliSorted = Object.entries(d.cliMora).sort((a,b)=>b[1].saldo-a[1].saldo);
   let moraRows = cliSorted.map(([rut,cd])=>{
@@ -495,32 +552,59 @@ function vendorBlock(v, d, avgDays, avgSale, saldoPercentile, pctReiterado) {
   const vLabel = v==='Empresa' ? '🏢 Empresa (sin vendedor asignado)' : `👤 ${v}`;
   const empNote = v==='Empresa'?`<div class="emp-note">⚠️ Cartera sin ejecutivo. Requiere asignación urgente para garantizar seguimiento y comisión.</div>`:'';
 
+  // Barra mini antigüedad (solo si hay cartera vencida)
+  const miniAging = d.vencida > 0 ? `
+  <div style="padding:12px 26px 14px;background:#f9fbfc;border-bottom:1px solid #eef1f5">
+    <div style="font-size:10px;font-weight:700;color:#95a5a6;margin-bottom:7px">ANTIGÜEDAD CARTERA VENCIDA — ${fm(d.vencida)}</div>
+    <div class="agebar" style="margin-bottom:8px">
+      <div style="width:${vBarInicial}%;background:#f1c40f" title="Atraso Inicial 1-5d: ${fm(d.atrasoInicial)}"></div>
+      <div style="width:${vBarRiesgo}%;background:#e67e22"  title="Atraso en Riesgo 6-10d: ${fm(d.atrasoRiesgo)}"></div>
+      <div style="width:${vBarCritica}%;background:#c0392b" title="Cobranza Crítica +10d: ${fm(d.critica)}"></div>
+    </div>
+    <div style="display:flex;gap:24px;font-size:10px;font-weight:600;flex-wrap:wrap">
+      <span style="color:#b7950b">🟡 Inicial 1-5d · ${fm(d.atrasoInicial)} (${vBarInicial}%)</span>
+      <span style="color:#d35400">🟠 Riesgo 6-10d · ${fm(d.atrasoRiesgo)} (${vBarRiesgo}%)</span>
+      <span style="color:#c0392b">🔴 Crítica +10d · ${fm(d.critica)} (${vBarCritica}%)</span>
+    </div>
+  </div>` : '';
+
   return `
 <div class="vblock" id="v_${v.replace(/\s/g,'_')}">
   <div class="vhdr" style="border-left:5px solid ${col}">
     <div>
       <div class="vname">${vLabel}</div>
       <div class="vstats">
-        <span>Cartera: <strong>${fm(d.cartera)}</strong></span>
-        <span>Mora: <strong style="color:${col}">${fm(d.mora)}</strong> (${mp.toFixed(0)}%)</span>
-        <span>Cobrado hist.: <strong style="color:#27ae60">${fm(d.cobrado)}</strong></span>
-        <span>Bajo corte ≤25: <strong>${fm(d.bajoCorte)}</strong></span>
+        <span>Cartera Vencida: <strong style="color:#c0392b">${fm(d.vencida)}</strong></span>
+        <span>Por Vencer: <strong style="color:#27ae60">${fm(d.porVencer)}</strong></span>
+        <span>Mora (≥3d): <strong style="color:${col}">${fm(d.mora)}</strong> (${mp.toFixed(0)}%)</span>
+        <span>Corte ≤25: <strong>${fm(d.bajoCorte)}</strong></span>
       </div>
     </div>
     <div class="cboxes">
-      <div class="cbox">
-        <div class="clbl">💰 Com. sobre Cobrado</div>
-        <div class="cval">${fm(commCob)}</div>
-        <div class="csub">Base: ${fm(d.cobrado)}</div>
+      <div class="cbox" style="background:#f0f4ff;border-color:#d5e0ff">
+        <div class="clbl">📊 Por Cobrar Total</div>
+        <div class="cval">${fm(d.cartera)}</div>
+        <div class="csub">Impacto en flujo de caja</div>
       </div>
-      <div class="cbox pend">
-        <div class="clbl">🎯 Com. Pendiente ≤25</div>
-        <div class="cval">${fm(commPend)}</div>
-        <div class="csub">Base: ${fm(d.bajoCorte)}</div>
+      <div class="cbox" style="background:#f0fff4;border-color:#a8d5b5">
+        <div class="clbl">✅ Cobrado en Período</div>
+        <div class="cval">${fm(d.cobradoPeriodo)}</div>
+        <div class="csub">${periodoStr}</div>
+      </div>
+      <div class="cbox" style="background:#eafaf1;border-color:#82d0a0">
+        <div class="clbl">💰 Comisión Recaudada</div>
+        <div class="cval" style="color:#1e8449">${fm(commRecaudada)}</div>
+        <div class="csub">1.5% de ${fm(d.cobradoPeriodo)}</div>
+      </div>
+      <div class="cbox pend" style="background:#fff8f0;border-color:#f0c080">
+        <div class="clbl">🎯 Comisión por Recaudar</div>
+        <div class="cval" style="color:#d35400">${fm(commPorRecaudar)}</div>
+        <div class="csub">1.5% de ${fm(d.cartera)}</div>
       </div>
     </div>
   </div>
   ${empNote}
+  ${miniAging}
   <div class="sub-t">🚫 Clientes Bloqueados — ${cliSorted.length} · ${fm(d.mora)}</div>
   <table>
     <thead><tr>
@@ -544,14 +628,16 @@ function vendorBlock(v, d, avgDays, avgSale, saldoPercentile, pctReiterado) {
 // ═══════════════════════════════════════════════════════════
 // RENDER DASHBOARD
 // ═══════════════════════════════════════════════════════════
-function renderDashboard(data) {
-  const {TODAY, COMM_CUT, cxc, totalSaldo, totalMora, totalCobCXC, pctMora,
+function renderDashboard(data, isoDate) {
+  const {TODAY, COMM_CUT, PERIODO_START, cxc, totalSaldo, totalMora, totalCobCXC, pctMora,
          cobradoSemana, veniceHoy, numBloq, pareto, moraSorted,
          vData, VENDOR_ORDER, avgDays, avgSale,
          totalVencida, totalPorVencer, totalCritica, numVencidas, numCriticas,
          clientesVencidos, clientesCriticos, saldoPercentile, pctReiterado,
          totalAtrasoInicial, totalAtrasoRiesgo, numAtrasoInicial, numAtrasoRiesgo,
-         clientesAtrasoInicial, clientesAtrasoRiesgo} = data;
+         clientesAtrasoInicial, clientesAtrasoRiesgo,
+         cobDesde, cobHasta} = data;
+  const fPeriodo = `${fdate(PERIODO_START)} – ${fdate(COMM_CUT)}`;
 
   const fToday = fmths(TODAY);
   const fTodayShort = fdate(TODAY);
@@ -608,8 +694,15 @@ function renderDashboard(data) {
 
   // ── Vendor sections ──
   const vendorSections = VENDOR_ORDER.filter(v=>vData[v]).map(v=>
-    vendorBlock(v, vData[v], avgDays, avgSale, saldoPercentile, pctReiterado)
+    vendorBlock(v, vData[v], avgDays, avgSale, saldoPercentile, pctReiterado, cobDesde, cobHasta)
   ).join('');
+
+  // ── Vendor picker options ──
+  const vendorOptions = ['<option value="">— Ver todos los ejecutivos —</option>',
+    ...VENDOR_ORDER.filter(v=>vData[v]).map(v=>
+      `<option value="${v}">${v==='Empresa'?'🏢 Empresa':'👤 '+v}</option>`
+    )
+  ].join('');
 
   const html = `
 <div class="hdr">
@@ -617,9 +710,18 @@ function renderDashboard(data) {
     <h1>📊 Sistema de Análisis de Cobranza Estratégica y Comisiones</h1>
     <p>COMERCIAL GESTAPACK SPA · Exportación Sistema Kame · Corte al ${fToday}</p>
   </div>
-  <div class="hdr-r">
-    <strong>${fTodayShort}</strong>
-    Bloqueo ≥3d · Comisión 1.5% · Corte ≤${fdate(COMM_CUT)}
+  <div class="hdr-r" style="display:flex;flex-direction:column;align-items:flex-end;gap:7px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <label style="font-size:10px;opacity:.65;letter-spacing:.4px;text-transform:uppercase">📅 Fecha de consulta</label>
+      <input type="date" id="ref-date-picker" value="${isoDate||''}"
+        onchange="refreshWithDate(this.value)"
+        style="background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.35);border-radius:8px;
+               color:#fff;padding:5px 12px;font-size:14px;font-weight:800;cursor:pointer;
+               outline:none;transition:border .2s"
+        onfocus="this.style.borderColor='rgba(255,255,255,.7)'"
+        onblur="this.style.borderColor='rgba(255,255,255,.35)'">
+    </div>
+    <div style="font-size:10px;opacity:.6">Bloqueo ≥3d · Comisión 1.5% · Período móvil: ${fPeriodo}</div>
   </div>
 </div>
 
@@ -766,13 +868,35 @@ function renderDashboard(data) {
   <div class="snum" style="background:linear-gradient(135deg,#27ae60,#2ecc71)">2</div>
   <div>
     <div class="stxt">Sección 2 — Detalle por Ejecutivo de Ventas</div>
-    <div class="ssub">Comisiones 1.5% · Bloqueos · Alertas preventivas · Corte comisión: ≤ ${fdate(COMM_CUT)}</div>
+    <div class="ssub">Comisiones 1.5% · Bloqueos · Alertas preventivas · Período móvil: ${fPeriodo}</div>
   </div>
 </div>
+
+<!-- Vendor picker card -->
+<div class="card" style="background:linear-gradient(135deg,#f4f6ff,#ffffff);border:2px solid #e0e6f7;
+     text-align:center;padding:32px 24px;margin-bottom:22px">
+  <div style="font-size:28px;margin-bottom:8px">👤</div>
+  <div style="font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:4px">
+    Selecciona tu nombre
+  </div>
+  <div style="font-size:11px;color:#95a5a6;margin-bottom:20px">
+    Verás tu cartera, comisiones y alertas. Elige <em>Ver todos</em> para la vista gerencial completa.
+  </div>
+  <select id="vendor-picker" onchange="filterVendor(this.value)"
+    style="padding:11px 24px;border-radius:12px;border:2px solid #c8d6f0;font-size:14px;
+           font-weight:700;color:#1a1a2e;background:#fff;cursor:pointer;
+           min-width:280px;max-width:100%;outline:none;
+           box-shadow:0 2px 8px rgba(41,128,185,.12);transition:border .2s"
+    onfocus="this.style.borderColor='#2980b9'"
+    onblur="this.style.borderColor='#c8d6f0'">
+    ${vendorOptions}
+  </select>
+</div>
+
 ${vendorSections}
 
 </div>
-<div class="footer">COMERCIAL GESTAPACK SPA · Sistema Kame · Corte ${fTodayShort} · Bloqueo ≥3d · Comisión 1.5% · Corte ≤${fdate(COMM_CUT)}</div>`;
+<div class="footer">COMERCIAL GESTAPACK SPA · Sistema Kame · Corte ${fTodayShort} · Bloqueo ≥3d · Comisión 1.5% · Período móvil: ${fPeriodo}</div>`;
 
   document.getElementById('dashboard').innerHTML = html;
   document.getElementById('upload-screen').style.display = 'none';
@@ -795,14 +919,47 @@ function generateDashboard() {
   document.getElementById('spinner').style.display = 'flex';
   setTimeout(() => {
     try {
-      const data = analyse(fileCXC, fileCOB);
-      renderDashboard(data);
+      const hoy = new Date();
+      currentRefDate = hoy.toISOString().slice(0,10);
+      const data = analyse(fileCXC, fileCOB, hoy);
+      renderDashboard(data, currentRefDate);
     } catch(err) {
       alert('Error procesando archivos: ' + err.message);
       console.error(err);
     }
     document.getElementById('spinner').style.display = 'none';
   }, 80);
+}
+
+function refreshWithDate(isoStr) {
+  if (!fileCXC || !fileCOB || !isoStr) return;
+  currentRefDate = isoStr;
+  document.getElementById('spinner').style.display = 'flex';
+  setTimeout(() => {
+    try {
+      const [y,m,d] = isoStr.split('-').map(Number);
+      const refDate = new Date(y, m-1, d);
+      const data = analyse(fileCXC, fileCOB, refDate);
+      renderDashboard(data, isoStr);
+      // Restaurar el valor del picker (se recrea con el innerHTML)
+      const picker = document.getElementById('ref-date-picker');
+      if (picker) picker.value = isoStr;
+    } catch(err) {
+      alert('Error al cambiar fecha: ' + err.message);
+      console.error(err);
+    }
+    document.getElementById('spinner').style.display = 'none';
+  }, 80);
+}
+
+function filterVendor(val) {
+  document.querySelectorAll('.vblock').forEach(b => {
+    b.style.display = (!val || b.id === 'v_' + val.replace(/\s/g,'_')) ? '' : 'none';
+  });
+  if (val) {
+    const target = document.getElementById('v_' + val.replace(/\s/g,'_'));
+    if (target) setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'start'}), 120);
+  }
 }
 
 function resetApp() {
